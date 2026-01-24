@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
-import dssLogo from '../../assets/dss_logo.jpg';
+import dssLogo from '../../assets/nav_logo.png';
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);

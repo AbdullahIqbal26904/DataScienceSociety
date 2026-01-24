@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { Typewriter } from 'react-simple-typewriter';
 import SocialButtons from '../buttons/SocialButtons';
-
+import dss_logo from '../../assets/IBA Data Science Society (Secondary).png'
 function HeroSection() {
     const { society } = useSelector((state) => state.allCart);
     
@@ -151,10 +151,10 @@ function HeroSection() {
                         <div className="relative">
                             {/* Background animated elements */}
                             <motion.div 
-                                className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-secondary opacity-70 blur-md"
+                                className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary to-secondary opacity-50 blur-xl"
                                 animate={{ 
                                     scale: [1, 1.05, 1],
-                                    rotate: [0, 5, 0]
+                                    rotate: [0, 2, 0]
                                 }}
                                 transition={{ 
                                     duration: 5,
@@ -163,22 +163,22 @@ function HeroSection() {
                                 }}
                             />
                             
-                            {/* Main circular frame */}
+                            {/* Main rectangular frame for horizontal logo */}
                             <motion.div 
-                                className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full p-2 bg-gradient-to-r from-primary to-secondary"
+                                className="relative w-[380px] md:w-[450px] lg:w-[500px] p-1"
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                {/* Logo image */}
+                                {/* Logo image with transparent background */}
                                 <img
-                                    src={img}
+                                    src={dss_logo}
                                     alt="IBA Data Science Society Logo"
-                                    className="w-full h-full object-cover rounded-full border-4 border-black"
+                                    className="w-full h-auto object-contain bg-transparent"
                                 />
                                 
                                 {/* Decorative elements */}
                                 <motion.div 
-                                    className="absolute -top-6 -right-6 w-12 h-12 rounded-full bg-primary"
+                                    className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-primary"
                                     animate={{ 
                                         y: [0, -10, 0],
                                     }}
@@ -189,7 +189,7 @@ function HeroSection() {
                                     }}
                                 />
                                 <motion.div 
-                                    className="absolute -bottom-4 -left-4 w-8 h-8 rounded-full bg-secondary"
+                                    className="absolute -bottom-3 -left-3 w-6 h-6 rounded-full bg-secondary"
                                     animate={{ 
                                         x: [0, 10, 0],
                                     }}
@@ -202,21 +202,21 @@ function HeroSection() {
                                 
                                 {/* Data visualization elements */}
                                 <motion.div
-                                    className="absolute -bottom-12 -right-12 w-20 h-20 bg-gray-900/80 backdrop-blur-md rounded-lg flex items-center justify-center"
+                                    className="absolute -bottom-10 -right-10 w-16 h-16 bg-gray-900/80 backdrop-blur-md rounded-lg flex items-center justify-center"
                                     animate={{ rotate: [0, 10, 0] }}
                                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                                 >
-                                    <svg className="w-10 h-10 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <svg className="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                     </svg>
                                 </motion.div>
                                 
                                 <motion.div
-                                    className="absolute -top-12 -left-12 w-16 h-16 bg-gray-900/80 backdrop-blur-md rounded-lg flex items-center justify-center"
+                                    className="absolute -top-10 -left-10 w-14 h-14 bg-gray-900/80 backdrop-blur-md rounded-lg flex items-center justify-center"
                                     animate={{ rotate: [0, -10, 0] }}
                                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                                 >
-                                    <svg className="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <svg className="w-7 h-7 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
                                     </svg>
                                 </motion.div>

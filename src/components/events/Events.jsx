@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { useSelector } from 'react-redux';
 
 const Events = () => {
@@ -76,8 +76,14 @@ const EventItem = ({ event, index }) => {
             
             {/* Date - Mobile version (visible only on small screens) */}
             <div className="md:hidden text-center mb-4">
-                <span className="inline-block py-1 px-4 rounded-full bg-gray-800 text-primary font-medium text-sm">
-                    {event.date}
+                <span className={`inline-block py-1 px-4 rounded-full font-medium text-sm ${
+                    event.status === 'completed' 
+                        ? 'bg-green-900/50 text-green-400' 
+                        : event.status === 'upcoming' 
+                            ? 'bg-primary/20 text-primary' 
+                            : 'bg-gray-800 text-primary'
+                }`}>
+                    {event.status === 'completed' && '✓ '}{event.date}
                 </span>
             </div>
             
@@ -85,8 +91,14 @@ const EventItem = ({ event, index }) => {
             <div className={`md:w-1/2 ${isEven ? 'md:pr-12' : 'md:pl-12'} mb-8 md:mb-0`}>
                 {/* Date - Desktop version */}
                 <div className="hidden md:block mb-2">
-                    <span className="inline-block py-1 px-4 rounded-full bg-gray-800 text-primary font-medium text-sm">
-                        {event.date}
+                    <span className={`inline-block py-1 px-4 rounded-full font-medium text-sm ${
+                        event.status === 'completed' 
+                            ? 'bg-green-900/50 text-green-400' 
+                            : event.status === 'upcoming' 
+                                ? 'bg-primary/20 text-primary' 
+                                : 'bg-gray-800 text-primary'
+                    }`}>
+                        {event.status === 'completed' && '✓ '}{event.date}
                     </span>
                 </div>
                 
@@ -104,22 +116,52 @@ const EventItem = ({ event, index }) => {
                 </motion.button>
             </div>
             
-            {/* Image */}
+            {/* Image or Video */}
             <div className={`md:w-1/2 ${isEven ? 'md:pl-12' : 'md:pr-12'}`}>
                 <motion.div 
-                    className="relative overflow-hidden rounded-xl"
+                    className={`relative overflow-hidden rounded-xl ${event.video ? 'max-w-[280px] mx-auto' : ''}`}
                     whileHover={{ scale: 1.03 }}
                     transition={{ duration: 0.3 }}
                 >
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 opacity-60"></div>
-                    <img 
-                        src={event.image} 
-                        alt={event.title} 
-                        className="w-full h-64 object-cover"
-                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 opacity-60 pointer-events-none z-10"></div>
+                    {event.video ? (
+                        <VideoPlayer src={event.video} />
+                    ) : (
+                        <img 
+                            src={event.image} 
+                            alt={event.title} 
+                            className="w-full h-64 object-cover"
+                        />
+                    )}
                 </motion.div>
             </div>
         </motion.div>
+    );
+};
+
+const VideoPlayer = ({ src }) => {
+    const videoRef = useRef(null);
+    const isInView = useInView(videoRef, { amount: 0.5 });
+
+    useEffect(() => {
+        if (videoRef.current) {
+            if (isInView) {
+                videoRef.current.play();
+            } else {
+                videoRef.current.pause();
+            }
+        }
+    }, [isInView]);
+
+    return (
+        <video 
+            ref={videoRef}
+            src={src} 
+            loop 
+            // muted 
+            playsInline
+            className="w-full aspect-[9/16] object-cover"
+        />
     );
 };
 
