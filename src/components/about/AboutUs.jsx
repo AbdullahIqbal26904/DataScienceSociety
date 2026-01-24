@@ -55,7 +55,7 @@ const AboutUs = () => {
                     transition={{ duration: 0.8 }}
                 >
                     <span className="inline-block px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary text-sm font-medium mb-4">
-                        🚀 Who We Are
+                        Who We Are
                     </span>
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                         About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-secondary">Us</span>

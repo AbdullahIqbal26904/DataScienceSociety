@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import Events from './components/events/Events';
@@ -10,6 +11,7 @@ import BackgroundManager from './components/background/BackgroundManager';
 import HeroSection from './components/hero/HeroSection';
 import Navbar from './components/navbar/Navbar';
 import DataverseSection from './components/dataverse/DataverseSection';
+import HxDRegistration from './components/dataverse/HxDRegistration';
 import AboutUs from './components/about/AboutUs';
 import Gallery from './components/gallery/Gallery';
 import { setshowloader, setInitialData } from './redux/features/portfolioSlice';
@@ -90,49 +92,56 @@ export default function App() {
     );
   } else {
     return (
-      <main className="relative w-full h-screen">
-        <BackgroundManager />
-        <div className="max-w-screen-2xl mx-auto relative z-10">
-          <Navbar />
-          <div className="snap-y snap-mandatory h-screen overflow-y-auto overflow-x-hidden">
-            <div id="hero" className="snap-start min-h-screen w-full flex items-center">
-              <HeroSection />
-            </div>
+      <Router>
+        <Routes>
+          <Route path="/register" element={<HxDRegistration />} />
+          <Route path="/*" element={
+            <main className="relative w-full h-screen">
+              <BackgroundManager />
+              <div className="max-w-screen-2xl mx-auto relative z-10">
+                <Navbar />
+                <div className="snap-y snap-mandatory h-screen overflow-y-auto overflow-x-hidden">
+                  <div id="hero" className="snap-start min-h-screen w-full flex items-center">
+                    <HeroSection />
+                  </div>
             
-            <div id="about" className="snap-start min-h-screen w-full flex items-center justify-center">
-              <div className="w-full px-4">
-                <AboutUs />
+                  <div id="about" className="snap-start min-h-screen w-full flex items-center justify-center">
+                    <div className="w-full px-4">
+                      <AboutUs />
+                    </div>
+                  </div>
+            
+                  <div id="events" className="snap-start min-h-screen w-full flex items-center justify-center">
+                    <div className="w-full">
+                      <Events />
+                    </div>
+                  </div>
+            
+                  <div id="dataverse" className="snap-start min-h-screen w-full">
+                    <DataverseSection />
+                  </div>
+            
+                  <div id="projects" className="snap-start min-h-screen w-full">
+                    <Projects />
+                  </div>
+            
+                  <div id="gallery" className="snap-start min-h-screen w-full">
+                    <Gallery />
+                  </div>
+            
+                  <div id="contact" className="snap-start min-h-screen w-full">
+                    <Contact />
+                  </div>
+            
+                  <div className="snap-start w-full">
+                    <Footer />
+                  </div>
+                </div>
               </div>
-            </div>
-            
-            <div id="events" className="snap-start min-h-screen w-full flex items-center justify-center">
-              <div className="w-full">
-                <Events />
-              </div>
-            </div>
-            
-            <div id="dataverse" className="snap-start min-h-screen w-full">
-              <DataverseSection />
-            </div>
-            
-            <div id="projects" className="snap-start min-h-screen w-full">
-              <Projects />
-            </div>
-            
-            <div id="gallery" className="snap-start min-h-screen w-full">
-              <Gallery />
-            </div>
-            
-            <div id="contact" className="snap-start min-h-screen w-full">
-              <Contact />
-            </div>
-            
-            <div className="snap-start w-full">
-              <Footer />
-            </div>
-          </div>
-        </div>
-      </main>
+            </main>
+          } />
+        </Routes>
+      </Router>
     )
   }
 }
