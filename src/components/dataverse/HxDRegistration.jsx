@@ -48,15 +48,19 @@ const HxDRegistration = () => {
     // --- FILE STATE ---
     const [file, setFile] = useState(null); 
     
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile && selectedFile.size > 2 * 1024 * 1024) {
-            setSubmitError("File is too big! Please use an image under 2MB.");
-            return;
-        }
-        setFile(selectedFile);
-        setSubmitError(null); // Clear error on new file
-    };
+    // Change 1: In your handleFileChange function
+const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    // Changed 2 * 1024 * 1024 to 4 * 1024 * 1024 (4MB)
+    if (selectedFile && selectedFile.size > 4 * 1024 * 1024) {
+        setSubmitError("File is too big! Please use an image under 4MB.");
+        return;
+    }
+    setFile(selectedFile);
+    setSubmitError(null); 
+};
+
+// Change 2: In the JSX render section for the file input label
 
     useEffect(() => {
         // Deadline: Feb 6, 2026 at 11:59 PM
@@ -398,7 +402,9 @@ const HxDRegistration = () => {
                             <a href={PAYMENT_LINKS[participantCount]} target="_blank" rel="noopener noreferrer" className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg text-center">Pay Rs {totalCost} ↗</a>
                         </div>
                         <div className="flex flex-col relative">
-                            <label className="text-sm text-gray-400 mb-1">Payment Screenshot (Max 2MB) <span className="text-red-400">*</span></label>
+                            <label className="text-sm text-gray-400 mb-1">
+    Payment Screenshot (Max 4MB) <span className="text-red-400">*</span>
+</label>
                             <input type="file" accept="image/*" onChange={handleFileChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500" />
                             <p className="text-xs text-gray-500 mt-2">Upload a clear screenshot of your transaction. {file && <span className="text-green-400 ml-2">✓ Selected: {file.name}</span>}</p>
                         </div>

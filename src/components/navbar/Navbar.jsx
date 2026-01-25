@@ -64,8 +64,11 @@ export default function Navbar() {
                     : 'bg-transparent'
             }`}
         >
-            <div className="container mx-auto flex flex-wrap px-4 py-3 md:px-6 flex-col md:flex-row items-center relative">
-                <div className="flex justify-between items-center w-full md:w-auto">
+            {/* Changed flex-col md:flex-row to flex-col lg:flex-row to keep tablet in column mode */}
+            <div className="container mx-auto flex flex-wrap px-4 py-3 md:px-6 flex-col lg:flex-row items-center relative">
+                
+                {/* Logo & Toggle Wrapper: Expanded to full width on tablet (lg:w-auto) */}
+                <div className="flex justify-between items-center w-full lg:w-auto">
                     {/* Logo */}
                     <a href="#hero" className="flex items-center group relative z-50">
                         <motion.div 
@@ -85,8 +88,8 @@ export default function Navbar() {
                         </motion.div>
                     </a>
                     
-                    {/* Mobile menu button */}
-                    <div className="md:hidden">
+                    {/* Mobile/Tablet menu button (lg:hidden ensures it shows on tablet) */}
+                    <div className="lg:hidden">
                         <motion.button
                             onClick={toggleMobileMenu}
                             whileTap={{ scale: 0.95 }}
@@ -103,8 +106,8 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* Desktop navigation */}
-                <nav className="hidden md:flex md:ml-auto flex-wrap items-center justify-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10">
+                {/* Desktop navigation (hidden lg:flex hides it on tablet) */}
+                <nav className="hidden lg:flex lg:ml-auto flex-wrap items-center justify-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10">
                     {listNavbar.map((item, index) => {
                         const isActive = activeSection === item.link.replace('#', '');
                         return (
@@ -123,12 +126,12 @@ export default function Navbar() {
                     })}
                 </nav>
                 
-                {/* Contact Button Desktop */}
+                {/* Contact Button Desktop (hidden lg:inline-flex hides it on tablet) */}
                 <motion.a
                     href="#contact"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="hidden md:inline-flex items-center gap-2 py-2.5 px-6 mt-4 md:mt-0 ml-4 bg-white/5 backdrop-blur-sm border border-white/10 hover:border-primary/50 rounded-full text-white font-medium hover:bg-white/10 transition-all duration-300 group"
+                    className="hidden lg:inline-flex items-center gap-2 py-2.5 px-6 mt-4 lg:mt-0 ml-4 bg-white/5 backdrop-blur-sm border border-white/10 hover:border-primary/50 rounded-full text-white font-medium hover:bg-white/10 transition-all duration-300 group"
                 >
                     <svg className="w-4 h-4 text-primary group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -136,7 +139,7 @@ export default function Navbar() {
                     Contact
                 </motion.a>
                 
-                {/* Mobile Menu Dropdown */}
+                {/* Mobile/Tablet Menu Dropdown (lg:hidden ensures it works on tablet) */}
                 <AnimatePresence>
                     {mobileMenuOpen && (
                         <motion.div
@@ -144,7 +147,7 @@ export default function Navbar() {
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.3, ease: "easeInOut" }}
-                            className="absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl md:hidden border-b border-white/10 overflow-hidden shadow-2xl"
+                            className="absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl lg:hidden border-b border-white/10 overflow-hidden shadow-2xl"
                         >
                             <div className="flex flex-col p-4 gap-2">
                                 {listNavbar.map((item, index) => {

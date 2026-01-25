@@ -158,7 +158,7 @@ const VideoPlayer = ({ src }) => {
             ref={videoRef}
             src={src} 
             loop 
-            // muted 
+            muted 
             playsInline
             className="w-full aspect-[9/16] object-cover"
         />

@@ -1,21 +1,18 @@
 import React from 'react';
-import img from '../../assets/image4.png'; // Using placeholder image for society logo
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { Typewriter } from 'react-simple-typewriter';
 import SocialButtons from '../buttons/SocialButtons';
-import dss_logo from '../../assets/IBA Data Science Society (Secondary).png'
+import dss_logo from '../../assets/IBA Data Science Society (Secondary).png';
+
 function HeroSection() {
     const { society } = useSelector((state) => state.allCart);
     
-    // Animation variants for staggered animations
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: {
-                staggerChildren: 0.3
-            }
+            transition: { staggerChildren: 0.3 }
         }
     };
     
@@ -28,7 +25,6 @@ function HeroSection() {
         }
     };
     
-    // Animation for scroll hint
     const scrollVariants = {
         initial: { y: 0 },
         animate: {
@@ -41,7 +37,6 @@ function HeroSection() {
         }
     };
 
-    // Data science related phrases for typewriter effect
     const phrases = [
         "Empowering students with data-driven thinking at IBA.",
         "Where data science enthusiasts collaborate and innovate.",
@@ -51,7 +46,9 @@ function HeroSection() {
     ];
     
     return (
-        <section id="hero" className="relative min-h-screen flex items-center py-16 md:py-0">
+        // Changed to justify-center to handle vertical alignment better
+        <section id="hero" className="relative w-full min-h-screen flex flex-col justify-center pt-32 pb-20 lg:py-0 overflow-hidden">
+            
             {/* Animated gradient backgrounds */}
             <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -66,7 +63,7 @@ function HeroSection() {
                 className="absolute w-1/2 aspect-square rounded-full bg-gradient-to-r from-primary via-[#ff6667] to-[#ff18b8] blur-[120px] -right-1/4 bottom-0"
             />
             
-            {/* Main Content */}
+            {/* Main Content Container */}
             <div className="container mx-auto px-6 md:px-12 relative z-10">
                 <motion.div 
                     className="flex flex-col lg:flex-row items-center justify-between gap-12 md:gap-16"
@@ -93,7 +90,7 @@ function HeroSection() {
                             </motion.h1>
                             
                             <motion.div 
-                                className="text-xl md:text-2xl lg:text-3xl font-medium text-white/80 min-h-[6rem]"
+                                className="text-xl md:text-2xl lg:text-3xl font-medium text-white/80 min-h-[6rem] flex items-center justify-center lg:justify-start"
                                 variants={itemVariants}
                             >
                                 <Typewriter
@@ -133,7 +130,7 @@ function HeroSection() {
                                 </motion.button>
                             </motion.div>
                             
-                            {/* Social media links for mobile */}
+                            {/* Mobile Social Buttons */}
                             <motion.div
                                 className="flex justify-center lg:justify-start gap-6 mt-8 lg:hidden"
                                 variants={itemVariants}
@@ -148,75 +145,56 @@ function HeroSection() {
                         className="w-full lg:w-1/2 flex justify-center lg:justify-end"
                         variants={itemVariants}
                     >
-                        <div className="relative">
-                            {/* Background animated elements */}
+                        {/* Added margin-top on mobile to separate from text */}
+                        <div className="relative mt-12 lg:mt-0">
+                            {/* Glow Effect */}
                             <motion.div 
                                 className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary to-secondary opacity-50 blur-xl"
-                                animate={{ 
-                                    scale: [1, 1.05, 1],
-                                    rotate: [0, 2, 0]
-                                }}
-                                transition={{ 
-                                    duration: 5,
-                                    repeat: Infinity,
-                                    ease: "easeInOut" 
-                                }}
+                                animate={{ scale: [1, 1.05, 1], rotate: [0, 2, 0] }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                             />
                             
-                            {/* Main rectangular frame for horizontal logo */}
+                            {/* Image Container */}
                             <motion.div 
-                                className="relative w-[380px] md:w-[450px] lg:w-[500px] p-1"
+                                className="relative w-[280px] md:w-[400px] lg:w-[500px] p-1"
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                {/* Logo image with transparent background */}
                                 <img
                                     src={dss_logo}
                                     alt="IBA Data Science Society Logo"
-                                    className="w-full h-auto object-contain bg-transparent"
+                                    className="w-full h-auto object-contain bg-transparent relative z-10"
                                 />
                                 
-                                {/* Decorative elements */}
+                                {/* Floating Orbs */}
                                 <motion.div 
-                                    className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-primary"
-                                    animate={{ 
-                                        y: [0, -10, 0],
-                                    }}
-                                    transition={{ 
-                                        duration: 2,
-                                        repeat: Infinity,
-                                        ease: "easeInOut" 
-                                    }}
+                                    className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-primary z-0"
+                                    animate={{ y: [0, -10, 0] }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                                 />
                                 <motion.div 
-                                    className="absolute -bottom-3 -left-3 w-6 h-6 rounded-full bg-secondary"
-                                    animate={{ 
-                                        x: [0, 10, 0],
-                                    }}
-                                    transition={{ 
-                                        duration: 3,
-                                        repeat: Infinity,
-                                        ease: "easeInOut" 
-                                    }}
+                                    className="absolute -bottom-3 -left-3 w-6 h-6 rounded-full bg-secondary z-0"
+                                    animate={{ x: [0, 10, 0] }}
+                                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                                 />
                                 
-                                {/* Data visualization elements */}
+                                {/* Floating Icons */}
                                 <motion.div
-                                    className="absolute -bottom-10 -right-10 w-16 h-16 bg-gray-900/80 backdrop-blur-md rounded-lg flex items-center justify-center"
+                                    className="absolute -bottom-8 -right-8 w-14 h-14 bg-gray-900/80 backdrop-blur-md rounded-lg flex items-center justify-center z-20"
                                     animate={{ rotate: [0, 10, 0] }}
                                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                                 >
-                                    <svg className="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <svg className="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                     </svg>
                                 </motion.div>
                                 
                                 <motion.div
-                                    className="absolute -top-10 -left-10 w-14 h-14 bg-gray-900/80 backdrop-blur-md rounded-lg flex items-center justify-center"
+                                    className="absolute -top-8 -left-8 w-12 h-12 bg-gray-900/80 backdrop-blur-md rounded-lg flex items-center justify-center z-20"
                                     animate={{ rotate: [0, -10, 0] }}
                                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                                 >
-                                    <svg className="w-7 h-7 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <svg className="w-6 h-6 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
                                     </svg>
                                 </motion.div>
@@ -225,16 +203,18 @@ function HeroSection() {
                     </motion.div>
                 </motion.div>
                 
-                {/* Desktop Social media sidebar (moved to right and separated) */}
+                {/* Desktop Sidebar */}
                 <div className="hidden lg:block fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
                     <div className="bg-black/40 backdrop-blur-md p-3 rounded-xl shadow-lg border border-white/10">
                         <SocialButtons display="vertical" />
                     </div>
                 </div>
                 
-                {/* Scroll hint */}
+                {/* Scroll hint - THE FIX IS HERE */}
                 <motion.div 
-                    className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-white/50"
+                    // Changed from absolute to relative on mobile (relative mt-20)
+                    // This forces it into the DOM flow, pushing the bottom boundary down
+                    className="relative mt-20 lg:absolute lg:bottom-8 lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:mt-0 flex flex-col items-center text-white/50 z-30"
                     variants={scrollVariants}
                     initial="initial"
                     animate="animate"
@@ -250,4 +230,3 @@ function HeroSection() {
 }
 
 export default HeroSection;
-
