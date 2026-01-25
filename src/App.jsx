@@ -15,6 +15,7 @@ import HxDRegistration from './components/dataverse/HxDRegistration';
 import AboutUs from './components/about/AboutUs';
 import Gallery from './components/gallery/Gallery';
 import { setshowloader, setInitialData } from './redux/features/portfolioSlice';
+import EditRegistration from './components/dataverse/EditRegistration';
 export default function App() {
   const { society, showloader } = useSelector((state) => state.allCart);
   const [hasError, setHasError] = useState(false);
@@ -95,6 +96,7 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/register" element={<HxDRegistration />} />
+          <Route path="/edit-registration" element={<EditRegistration />} />
           <Route path="/*" element={
             <main className="relative w-full h-screen">
               <BackgroundManager />
