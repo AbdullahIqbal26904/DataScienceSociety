@@ -34,7 +34,7 @@ export default function App() {
     setTimeout(() => {
       dispatch(setInitialData());
       dispatch(setshowloader(false));
-    }, 1500); // Short artificial delay for loading effect
+    }, 2500); // Short artificial delay for loading effect
 
     // Add a global error handler for critical application errors only
     const handleError = (event) => {
@@ -63,17 +63,76 @@ export default function App() {
   if (showloader) {
     // Display loading screen or spinner
     return (
-      <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-        {/* Animated Loader */}
-        <div className="relative flex items-center justify-center w-20 h-20">
-          <div className="absolute w-20 h-20 border-4 border-t-transparent border-primary rounded-full animate-spin"></div>
-          <div className="absolute w-16 h-16 border-4 border-t-transparent border-secondary rounded-full animate-spin-reverse"></div>
+      <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950 text-white">
+        {/* Animated background particles */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
         </div>
 
-        {/* Loading Text */}
-        <p className="mt-4 text-lg font-semibold tracking-wide text-gray-300 animate-pulse">
-          Loading, please wait...
-        </p>
+        {/* Main loader container */}
+        <div className="relative z-10 flex flex-col items-center">
+          {/* DNA/Data helix animation */}
+          <div className="relative w-24 h-24 mb-8">
+            {/* Outer rotating ring */}
+            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-cyan-400 border-r-cyan-400/50 animate-spin" style={{ animationDuration: '1.5s' }}></div>
+            
+            {/* Middle rotating ring - opposite direction */}
+            <div className="absolute inset-2 rounded-full border-2 border-transparent border-b-blue-400 border-l-blue-400/50 animate-spin" style={{ animationDuration: '2s', animationDirection: 'reverse' }}></div>
+            
+            {/* Inner rotating ring */}
+            <div className="absolute inset-4 rounded-full border-2 border-transparent border-t-purple-400 border-r-purple-400/50 animate-spin" style={{ animationDuration: '1s' }}></div>
+            
+            {/* Center pulsing dot */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-4 h-4 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-pulse shadow-lg shadow-cyan-500/50"></div>
+            </div>
+
+            {/* Orbiting dots */}
+            <div className="absolute inset-0 animate-spin" style={{ animationDuration: '3s' }}>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400/50"></div>
+            </div>
+            <div className="absolute inset-0 animate-spin" style={{ animationDuration: '3s', animationDelay: '1s' }}>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-purple-400 rounded-full shadow-lg shadow-purple-400/50"></div>
+            </div>
+            <div className="absolute inset-0 animate-spin" style={{ animationDuration: '3s', animationDelay: '2s' }}>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-blue-400 rounded-full shadow-lg shadow-blue-400/50"></div>
+            </div>
+          </div>
+
+          {/* Brand text */}
+          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            Data Science Society
+          </h1>
+
+          {/* Loading bar */}
+          <div className="w-48 h-1 bg-slate-800 rounded-full overflow-hidden mb-4">
+            <div className="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 rounded-full animate-loading-bar"></div>
+          </div>
+
+          {/* Loading text with typing effect */}
+          <p className="text-sm text-slate-400 tracking-widest uppercase">
+            <span className="inline-block animate-pulse">Initializing</span>
+            <span className="inline-block animate-bounce mx-1" style={{ animationDelay: '0.1s' }}>.</span>
+            <span className="inline-block animate-bounce mx-1" style={{ animationDelay: '0.2s' }}>.</span>
+            <span className="inline-block animate-bounce mx-1" style={{ animationDelay: '0.3s' }}>.</span>
+          </p>
+        </div>
+
+        {/* Bottom decorative line */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+
+        <style>{`
+          @keyframes loading-bar {
+            0% { width: 0%; margin-left: 0; }
+            50% { width: 70%; margin-left: 0; }
+            100% { width: 0%; margin-left: 100%; }
+          }
+          .animate-loading-bar {
+            animation: loading-bar 1.5s ease-in-out infinite;
+          }
+        `}</style>
       </div>
     );
 
@@ -102,6 +161,7 @@ export default function App() {
                 <HxDRegistration />
               </div>
             </main>
+
           } />
           <Route path="/edit-registration" element={<EditRegistration />} />
           <Route path="/*" element={
