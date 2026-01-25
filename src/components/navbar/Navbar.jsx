@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSelector } from 'react-redux';
-import dssLogo from '../../assets/nav_logo.png';
+import dssLogo from '/assets/ds_logo.png';
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -11,11 +11,13 @@ export default function Navbar() {
     
     useEffect(() => {
         const handleScroll = () => {
-            const scrollPosition = window.scrollY;
+            // Find the scrollable container
+            const scrollContainer = document.querySelector('.snap-y.snap-mandatory');
+            const scrollPosition = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
             setScrolled(scrollPosition > 50);
             
             // Determine which section is in view
-            const sections = ['hero', 'about', 'events', 'dataverse', 'projects', 'gallery', 'contact'];
+            const sections = ['hero', 'about', 'events', 'dataverse', 'gallery', 'contact'];
             let currentActive = '';
             
             for (const section of sections) {
@@ -33,17 +35,31 @@ export default function Navbar() {
             setActiveSection(currentActive);
         };
         
+        // Add scroll listener to both window and the scrollable container
+        const scrollContainer = document.querySelector('.snap-y.snap-mandatory');
+        
+        if (scrollContainer) {
+            scrollContainer.addEventListener('scroll', handleScroll);
+        }
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        
+        // Initial check
+        handleScroll();
+        
+        return () => {
+            if (scrollContainer) {
+                scrollContainer.removeEventListener('scroll', handleScroll);
+            }
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
     
     const listNavbar = [
-        { name: 'Home', link: '#hero', icon: '🏠' },
-        { name: 'About', link: '#about', icon: '📖' },
-        { name: 'Events', link: '#events', icon: '🎉' },
-        { name: 'Hackfest x Datathon 2.0', link: '#dataverse', icon: '🌐' },
-        { name: 'Projects', link: '#projects', icon: '💡' },
-        { name: 'Gallery', link: '#gallery', icon: '📸' },
+        { name: 'Home', link: '#hero', icon: '' },
+        { name: 'About', link: '#about', icon: '' },
+        { name: 'Events', link: '#events', icon: '' },
+        { name: 'Hackfest x Datathon 2.0', link: '#dataverse', icon: '' },
+        { name: 'Gallery', link: '#gallery', icon: '' },
     ];
 
     const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);

@@ -5,10 +5,10 @@ const societyData = {
     name: "IBA Data Science Society",
     tagline: "Where Data Meets Innovation",
     mission: "To cultivate a thriving ecosystem of data enthusiasts at IBA by providing hands-on learning experiences, industry exposure, and collaborative opportunities. We bridge the gap between academic theory and real-world data science applications, empowering students to solve tomorrow's challenges today.",
-    vision: "To be Pakistan's premier student-led data science community — nurturing the next generation of data scientists, analysts, and AI innovators who will drive meaningful impact across industries.",
+    vision: "To become Pakistan’s leading student data science community, helping students learn, grow, and make a real impact in the real world.",
     about: [
-        "Founded by passionate students at the Institute of Business Administration, the Data Science Society (DSS) has grown into one of IBA's most dynamic technical communities. We believe that data literacy is the superpower of the 21st century.",
-        "From beginner-friendly Python workshops to advanced machine learning bootcamps, industry speaker sessions to 48-hour hackathons — we create spaces where curiosity transforms into expertise. Our flagship events like HackFest x Datathon have attracted 500+ participants.",
+        "Founded by passionate students at the Institute of Business Administration, the Data Science Society (DSS) has grown into one of IBA's most dynamic technical communities.",
+        "From beginner-friendly Python workshops to advanced machine learning bootcamps, industry speaker sessions to 48-hour hackathons, we create spaces where curiosity transforms into expertise. Our flagship events like HackFest x Datathon have attracted 500+ participants.",
         "Whether you're a business student curious about analytics or a CS major diving deep into neural networks, DSS welcomes everyone. No prior experience needed — just bring your enthusiasm to learn and collaborate!"
     ],
     events: [
@@ -23,7 +23,7 @@ const societyData = {
             title: "Hackfest x Datathon 2.0",
             date: "Upcoming - 2026",
             description: "Get ready for the ultimate data challenge! In collaboration with IBA Google Developers Group, we're bringing Hackfest x Datathon 2.0 - a fusion of hackathon innovation and data science competition. Build, analyze, and compete!",
-            image: "/assets/image2.png",
+            image: "/assets/hxd.png",
             status: "upcoming"
         }
     ],

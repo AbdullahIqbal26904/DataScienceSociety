@@ -121,10 +121,6 @@ export default function App() {
                     <DataverseSection />
                   </div>
             
-                  <div id="projects" className="snap-start min-h-screen w-full">
-                    <Projects />
-                  </div>
-            
                   <div id="gallery" className="snap-start min-h-screen w-full">
                     <Gallery />
                   </div>

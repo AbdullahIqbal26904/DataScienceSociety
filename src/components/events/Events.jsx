@@ -130,7 +130,7 @@ const EventItem = ({ event, index }) => {
                         <img 
                             src={event.image} 
                             alt={event.title} 
-                            className="w-full h-64 object-cover"
+                            className="w-full h-64 object-fill"
                         />
                     )}
                 </motion.div>
