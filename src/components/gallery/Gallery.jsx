@@ -89,7 +89,13 @@ const Gallery = () => {
     }, [selectedImage, navigateImage]);
 
     return (
-        <section id="gallery" className="py-20 px-4 md:px-8 relative bg-gray-900">
+        <section id="gallery" className="py-20 px-4 md:px-8 relative overflow-hidden">
+            {/* Background - Clean and minimal */}
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+                {/* Grid pattern only - no colored blobs */}
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBtLTEgMGExIDEgMCAxIDAgMiAwIDEgMSAwIDEgMCAtMiAwIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDMiLz48L2c+PC9zdmc+')] opacity-40"></div>
+            </div>
+            
             <div className="container mx-auto relative z-10">
                 {/* Section Header */}
                 <div className="text-center mb-12">

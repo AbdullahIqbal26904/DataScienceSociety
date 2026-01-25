@@ -4,36 +4,39 @@ import { useSelector } from 'react-redux';
 import dssLogo from '/assets/ds_logo.png';
 
 export default function Navbar() {
-    const [scrolled, setScrolled] = useState(false);
-    const [activeSection, setActiveSection] = useState('');
+    const [activeSection, setActiveSection] = useState('hero');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const { society } = useSelector((state) => state.allCart);
     
     useEffect(() => {
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY;
-            setScrolled(scrollPosition > 50);
-            
-            const sections = ['hero', 'about', 'events', 'dataverse', 'gallery', 'contact'];
-            let currentActive = '';
-            
-            for (const section of sections) {
-                const element = document.getElementById(section);
-                if (element) {
-                    const rect = element.getBoundingClientRect();
-                    if (rect.top <= 200 && rect.bottom >= 100) {
-                        currentActive = section === 'hero' ? '' : section;
-                        break;
-                    }
-                }
-            }
-            setActiveSection(currentActive);
+        // Use Intersection Observer to detect which section is in view
+        // This works correctly with snap scroll containers
+        const sections = ['hero', 'about', 'events', 'dataverse', 'gallery', 'contact'];
+        
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '-40% 0px -40% 0px', // Trigger when section is in middle 20% of viewport
+            threshold: 0
         };
         
-        window.addEventListener('scroll', handleScroll);
-        handleScroll();
+        const observerCallback = (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveSection(entry.target.id);
+                }
+            });
+        };
         
-        return () => window.removeEventListener('scroll', handleScroll);
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        
+        sections.forEach((sectionId) => {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                observer.observe(element);
+            }
+        });
+        
+        return () => observer.disconnect();
     }, []);
     
     const listNavbar = [
@@ -47,8 +50,8 @@ export default function Navbar() {
     const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
     const closeMobileMenu = () => setMobileMenuOpen(false);
     
-    // Logic: Header is active if Scrolled OR if Mobile Menu is Open
-    const isHeaderActive = scrolled || mobileMenuOpen;
+    // Logic: Header is active (has background) when NOT on hero section OR if Mobile Menu is Open
+    const isHeaderActive = mobileMenuOpen || (activeSection !== 'hero');
 
     return (
         <motion.header
@@ -103,8 +106,7 @@ export default function Navbar() {
                 {/* Desktop navigation */}
                 <nav className="hidden md:flex md:ml-auto flex-wrap items-center justify-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10">
                     {listNavbar.map((item, index) => {
-                        const isActive = activeSection === item.link.replace('#', '') || 
-                                        (item.link === '#hero' && activeSection === '');
+                        const isActive = activeSection === item.link.replace('#', '');
                         return (
                             <a
                                 key={index}
@@ -146,8 +148,7 @@ export default function Navbar() {
                         >
                             <div className="flex flex-col p-4 gap-2">
                                 {listNavbar.map((item, index) => {
-                                    const isActive = activeSection === item.link.replace('#', '') || 
-                                                    (item.link === '#hero' && activeSection === '');
+                                    const isActive = activeSection === item.link.replace('#', '');
                                     return (
                                         <motion.a
                                             key={index}

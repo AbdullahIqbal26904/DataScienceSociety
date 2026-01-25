@@ -90,39 +90,11 @@ const DataverseSection = () => {
     }, [activeCategory]);
 
     return (
-        <section id="dataverse" className="py-24 relative overflow-hidden bg-gray-950">
-            {/* Background - Simplified for Performance */}
+        <section id="dataverse" className="py-24 relative overflow-hidden">
+            {/* Background - Clean and minimal */}
             <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-                {/* Static blurred blobs instead of animated huge divs */}
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/20 rounded-full blur-[100px]" />
-                <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-900/20 rounded-full blur-[100px]" />
-                
-                {/* Optimized Particles: Using Translate (GPU) instead of Top/Left (CPU) */}
-                {[...Array(15)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute w-1 h-1 bg-primary/40 rounded-full"
-                        // Set static initial position via style
-                        style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                        }}
-                        // Animate only transforms
-                        animate={{
-                            y: [0, -30, 0],
-                            opacity: [0.2, 0.8, 0.2],
-                        }}
-                        transition={{
-                            duration: 3 + Math.random() * 2,
-                            repeat: Infinity,
-                            delay: Math.random() * 2,
-                            ease: "easeInOut"
-                        }}
-                    />
-                ))}
-                
-                {/* Grid pattern */}
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBtLTEgMGExIDEgMCAxIDAgMiAwIDEgMSAwIDEgMCAtMiAwIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDMiLz48L2c+PC9zdmc+')] opacity-60"></div>
+                {/* Grid pattern only - no colored blobs */}
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBtLTEgMGExIDEgMCAxIDAgMiAwIDEgMSAwIDEgMCAtMiAwIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDMiLz48L2c+PC9zdmc+')] opacity-40"></div>
             </div>
 
             <div className="container mx-auto px-6 relative z-10">

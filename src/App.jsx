@@ -20,7 +20,7 @@ export default function App() {
   const { society, showloader } = useSelector((state) => state.allCart);
   const [hasError, setHasError] = useState(false);
   const dispatch = useDispatch();
-  
+
   // Initialize AOS animations
   useEffect(() => {
     AOS.init({
@@ -28,34 +28,34 @@ export default function App() {
       once: true, // Only animate elements once
     });
   }, []);
-  
+
   useEffect(() => {
     // Initialize with static data instead of API fetch
     setTimeout(() => {
       dispatch(setInitialData());
       dispatch(setshowloader(false));
     }, 1500); // Short artificial delay for loading effect
-    
+
     // Add a global error handler for critical application errors only
     const handleError = (event) => {
       // Log the error for debugging
       console.error('Global error:', event.error);
-      
+
       // Check if this is a critical error that should disable the app
       const errorString = event.error ? event.error.toString() : '';
-      const isCriticalError = 
+      const isCriticalError =
         errorString.includes('Out of memory') ||
         errorString.includes('Cannot read properties of undefined') ||
         errorString.includes('Maximum call stack size exceeded');
-      
+
       // Only set hasError for truly critical errors
       if (isCriticalError) {
         setHasError(true);
       }
     };
-    
+
     window.addEventListener('error', handleError);
-    
+
     return () => {
       window.removeEventListener('error', handleError);
     };
@@ -83,7 +83,7 @@ export default function App() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
         <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
         <p className="mb-4 text-center">We encountered an error loading the website.</p>
-        <button 
+        <button
           onClick={() => window.location.reload()}
           className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition-colors"
         >
@@ -95,7 +95,14 @@ export default function App() {
     return (
       <Router>
         <Routes>
-          <Route path="/register" element={<HxDRegistration />} />
+          <Route path="/register" element={
+            <main className="relative w-full min-h-screen">
+              <BackgroundManager />
+              <div className="relative z-10">
+                <HxDRegistration />
+              </div>
+            </main>
+          } />
           <Route path="/edit-registration" element={<EditRegistration />} />
           <Route path="/*" element={
             <main className="relative w-full h-screen">
@@ -106,31 +113,31 @@ export default function App() {
                   <div id="hero" className="snap-start min-h-screen w-full flex items-center">
                     <HeroSection />
                   </div>
-            
+
                   <div id="about" className="snap-start min-h-screen w-full flex items-center justify-center">
                     <div className="w-full px-4">
                       <AboutUs />
                     </div>
                   </div>
-            
+
                   <div id="events" className="snap-start min-h-screen w-full flex items-center justify-center">
                     <div className="w-full">
                       <Events />
                     </div>
                   </div>
-            
+
                   <div id="dataverse" className="snap-start min-h-screen w-full">
                     <DataverseSection />
                   </div>
-            
+
                   <div id="gallery" className="snap-start min-h-screen w-full">
                     <Gallery />
                   </div>
-            
+
                   <div id="contact" className="snap-start min-h-screen w-full">
                     <Contact />
                   </div>
-            
+
                   <div className="snap-start w-full">
                     <Footer />
                   </div>

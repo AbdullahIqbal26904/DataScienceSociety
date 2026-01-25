@@ -258,13 +258,25 @@ const handleFileChange = (e) => {
     }
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 font-sans text-gray-200">
-            <div className="absolute inset-0 -z-10">
-                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-900/20 rounded-full filter blur-[150px]" />
-                 <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-900/20 rounded-full filter blur-[150px]" />
+        <div className="min-h-screen relative overflow-hidden font-sans text-gray-200">
+            {/* Background overlay for better text readability */}
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none bg-gray-950/70">
+                {/* Grid pattern */}
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBtLTEgMGExIDEgMCAxIDAgMiAwIDEgMSAwIDEgMCAtMiAwIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDMiLz48L2c+PC9zdmc+')] opacity-40"></div>
             </div>
 
             <div className="container mx-auto px-4 py-8 max-w-3xl">
+                
+                {/* Back Button */}
+                <Link 
+                    to="/" 
+                    className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors group"
+                >
+                    <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Back to Home</span>
+                </Link>
                 
                 <motion.div 
                     initial={{ opacity: 0, y: -20 }}
