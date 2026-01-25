@@ -165,40 +165,40 @@ export default function App() {
           } />
           <Route path="/edit-registration" element={<EditRegistration />} />
           <Route path="/*" element={
-            <main className="relative w-full h-screen">
+            <main className="relative w-full min-h-screen">
               <BackgroundManager />
               <div className="max-w-screen-2xl mx-auto relative z-10">
                 <Navbar />
-                <div className="snap-y snap-mandatory h-screen overflow-y-auto overflow-x-hidden">
-                  <div id="hero" className="snap-start min-h-screen w-full flex items-center">
+                <div className="h-screen overflow-y-auto overflow-x-hidden scroll-smooth">
+                  <div id="hero" className="min-h-screen w-full flex items-center">
                     <HeroSection />
                   </div>
 
-                  <div id="about" className="snap-start min-h-screen w-full flex items-center justify-center">
+                  <div id="about" className="min-h-screen w-full flex items-center justify-center">
                     <div className="w-full px-4">
                       <AboutUs />
                     </div>
                   </div>
 
-                  <div id="events" className="snap-start min-h-screen w-full flex items-center justify-center">
+                  <div id="events" className="min-h-screen w-full flex items-center justify-center">
                     <div className="w-full">
                       <Events />
                     </div>
                   </div>
 
-                  <div id="dataverse" className="snap-start min-h-screen w-full">
+                  <div id="dataverse" className="min-h-screen w-full">
                     <DataverseSection />
                   </div>
 
-                  <div id="gallery" className="snap-start min-h-screen w-full">
+                  <div id="gallery" className="min-h-screen w-full">
                     <Gallery />
                   </div>
 
-                  <div id="contact" className="snap-start min-h-screen w-full">
+                  <div id="contact" className="min-h-screen w-full">
                     <Contact />
                   </div>
 
-                  <div className="snap-start w-full">
+                  <div className="w-full">
                     <Footer />
                   </div>
                 </div>
