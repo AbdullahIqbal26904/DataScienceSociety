@@ -391,25 +391,37 @@ const handleFileChange = (e) => {
 
                     {/* PAYMENT SECTION (No Changes) */}
                     {/* Copy previous payment section here, it was fine */}
-                     <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
-                        <h3 className="text-xl font-semibold text-white mb-4">Payment Verification</h3>
-                        <div className="bg-gray-950/50 p-4 rounded-lg mb-6 border border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
-                             <div className="text-left w-full">
-                                <p className="text-gray-400 text-sm">Amount to Pay:</p>
-                                <div className="text-2xl font-bold text-green-400">Rs {totalCost}</div>
-                                <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
-                            </div>
-                            <a href={PAYMENT_LINKS[participantCount]} target="_blank" rel="noopener noreferrer" className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg text-center">Pay Rs {totalCost} ↗</a>
-                        </div>
-                        <div className="flex flex-col relative">
-                            <label className="text-sm text-gray-400 mb-1">
-    Payment Screenshot (Max 4MB) <span className="text-red-400">*</span>
-</label>
-                            <input type="file" accept="image/*" onChange={handleFileChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500" />
-                            <p className="text-xs text-gray-500 mt-2">Upload a clear screenshot of your transaction. {file && <span className="text-green-400 ml-2">✓ Selected: {file.name}</span>}</p>
-                        </div>
-                    </div>
+                    <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+    <h3 className="text-xl font-semibold text-white mb-4">Payment Verification</h3>
+    
+    <div className="bg-gray-950/50 p-4 rounded-lg mb-4 border border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="text-left w-full">
+            <p className="text-gray-400 text-sm">Amount to Pay:</p>
+            <div className="text-2xl font-bold text-green-400">Rs {totalCost}</div>
+            <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
+        </div>
+        <a href={PAYMENT_LINKS[participantCount]} target="_blank" rel="noopener noreferrer" className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-lg text-center">Pay Rs {totalCost} ↗</a>
+    </div>
 
+    {/* 👇 ADDED POLICIES SECTION HERE */}
+    <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg mb-6">
+        <div className="flex items-start gap-2">
+            <span className="text-red-400 mt-0.5">⚠️</span>
+            <ul className="text-xs text-red-200/80 list-disc list-inside space-y-1">
+                <li><strong>No Refund Policy:</strong> Registration fees are strictly non-refundable.</li>
+                <li><strong>Entry Requirement:</strong> No entry will be allowed without verified payment.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div className="flex flex-col relative">
+        <label className="text-sm text-gray-400 mb-1">
+            Payment Screenshot (Max 4MB) <span className="text-red-400">*</span>
+        </label>
+        <input type="file" accept="image/*" onChange={handleFileChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500" />
+        <p className="text-xs text-gray-500 mt-2">Upload a clear screenshot of your transaction. {file && <span className="text-green-400 ml-2">✓ Selected: {file.name}</span>}</p>
+    </div>
+</div>
                     <button type="submit" disabled={loading} className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-lg rounded-xl shadow-lg shadow-purple-900/20 transition-all transform active:scale-95 disabled:opacity-50">
                         {loading ? 'Submitting...' : 'Complete Registration'}
                     </button>
