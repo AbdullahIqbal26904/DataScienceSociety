@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import dssLogo from '/assets/ds_logo.png'; 
 
 // --- CONFIGURATION ---
-const SHEET_API_URL = import.meta.env.VITE_SHEET_API_URL;
-const API_SECRET = import.meta.env.VITE_API_SECRET; // 🔒 Add this to your .env file!
+// const SHEET_API_URL = import.meta.env.VITE_SHEET_API_URL;
+// const API_SECRET = import.meta.env.VITE_API_SECRET; // 🔒 Add this to your .env file!
 
 const PAYMENT_LINKS = {
     1: import.meta.env.VITE_PAYMENT_LINK_1,
@@ -216,7 +216,7 @@ const HxDRegistration = () => {
             const base64Image = await convertToBase64(file);
 
             const payload = { 
-                apiSecret: API_SECRET, // 🔒 SENDING API KEY
+                // apiSecret: API_SECRET, // 🔒 SENDING API KEY
                 ...formData, 
                 competition: formData.competitions.join(', '),
                 totalPaid: totalCost,
@@ -225,9 +225,9 @@ const HxDRegistration = () => {
                 mimeType: file.type
             };
 
-            const response = await fetch(SHEET_API_URL, {
+           const response = await fetch("/api/submit", {
                 method: "POST",
-                body: JSON.stringify(payload),
+                body: JSON.stringify(payload), // No need for specific headers in Vercel functions usually
             });
 
             const result = await response.json();
