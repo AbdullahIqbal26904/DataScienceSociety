@@ -163,7 +163,7 @@ export default function App() {
             </main>
 
           } />
-          <Route path="/edit-registration" element={<EditRegistration />} />
+          <Route path="/edit" element={<EditRegistration />} />
           <Route path="/*" element={
             <main className="relative w-full min-h-screen">
               <BackgroundManager />
