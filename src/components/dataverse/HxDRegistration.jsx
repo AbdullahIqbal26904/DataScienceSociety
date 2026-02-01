@@ -88,6 +88,32 @@ const HxDRegistration = () => {
     });
 
     useEffect(() => {
+        const savedData = localStorage.getItem("hxd_form_progress");
+        if (savedData) {
+            try {
+                const parsed = JSON.parse(savedData);
+                // Merge saved data with default structure to avoid undefined errors
+                setFormData(prev => ({ ...prev, ...parsed.formData }));
+                
+                // Only restore valid booleans/numbers
+                if (parsed.paymentClicked !== undefined) setPaymentClicked(parsed.paymentClicked);
+                if (parsed.participantCount) setParticipantCount(parsed.participantCount);
+            } catch (e) {
+                console.error("Failed to load saved data", e);
+            }
+        }
+    }, []);
+
+    // 2. AUTO-SAVE DATA WHEN IT CHANGES
+    useEffect(() => {
+        const dataToSave = {
+            formData,
+            paymentClicked,
+            participantCount
+        };
+        localStorage.setItem("hxd_form_progress", JSON.stringify(dataToSave));
+    }, [formData, paymentClicked, participantCount]);
+    useEffect(() => {
         let total = 0;
         formData.competitions.forEach(compName => {
             const module = MODULES.find(m => m.name === compName);
@@ -487,7 +513,7 @@ const HxDRegistration = () => {
                         {/* File Upload */}
                         <div className="flex flex-col relative">
                             <label className="text-sm text-gray-400 mb-1">
-                                Payment Screenshot (Max 4MB) <span className="text-red-400">*</span>
+                                Payment Screenshot with reference number (Max 4MB) <span className="text-red-400">*</span>
                             </label>
                             <input type="file" accept="image/*" onChange={handleFileChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" />
                             <p className="text-xs text-gray-500 mt-2">Upload a clear screenshot of your transaction. {file && <span className="text-green-400 ml-2">✓ Selected: {file.name}</span>}</p>
