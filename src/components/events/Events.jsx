@@ -126,6 +126,8 @@ const EventItem = ({ event, index }) => {
                     <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 opacity-60 pointer-events-none z-10"></div>
                     {event.video ? (
                         <VideoPlayer src={event.video} />
+                    ) : event.collaboration ? (
+                        <CollaborationLogos images={event.collaboration.images} title={event.title} />
                     ) : (
                         <img 
                             src={event.image} 
@@ -162,6 +164,26 @@ const VideoPlayer = ({ src }) => {
             playsInline
             className="w-full aspect-[9/16] object-cover"
         />
+    );
+};
+
+const CollaborationLogos = ({ images, title }) => {
+    return (
+        <div className="flex flex-col items-center justify-center gap-3 p-6 bg-gray-900/50 rounded-xl h-64">
+            <img 
+                src={images[1]} 
+                alt={`${title} - GDG`} 
+                className="h-16 md:h-20 object-contain"
+            />
+            <span className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                ✕
+            </span>
+            <img 
+                src={images[0]} 
+                alt={`${title} - DSS`} 
+                className="h-16 md:h-20 object-contain"
+            />
+        </div>
     );
 };
 

@@ -23,7 +23,12 @@ const societyData = {
             title: "Hackfest x Datathon 2.0",
             date: "Upcoming - 2026",
             description: "Get ready for the ultimate data challenge! In collaboration with IBA Google Developers Group, we're bringing Hackfest x Datathon 2.0 - a fusion of hackathon innovation and data science competition. Build, analyze, and compete!",
-            image: "/assets/hxd.png",
+            collaboration: {
+                images: [
+                    "src/assets/IBA Data Science Society (Secondary).png",
+                    "/assets/GDG On Campus - Horizontal - Dark.png"
+                ]
+            },
             status: "upcoming"
         }
     ],
