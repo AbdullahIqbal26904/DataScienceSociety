@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 
-const SHEET_API_URL = import.meta.env.VITE_SHEET_API_URL;
-const API_SECRET = import.meta.env.VITE_API_SECRET; 
+// const SHEET_API_URL = import.meta.env.VITE_SHEET_API_URL;
+// const API_SECRET = import.meta.env.VITE_API_SECRET; 
 
 const EditRegistration = () => {
     const [searchParams] = useSearchParams();
@@ -44,8 +44,16 @@ const EditRegistration = () => {
             }
 
             try {
-                const url = `${SHEET_API_URL}?action=login&cnic=${cnic}&key=${key}`;
-                const res = await fetch(url);
+                // const url = `${SHEET_API_URL}?action=login&cnic=${cnic}&key=${key}`;
+                const res = await fetch("/api/submit", {
+                    method: "POST",
+                    body: JSON.stringify({ 
+                        action: "login", // Tell backend this is a login request
+                        cnic: cnic, 
+                        key: key 
+                    }), 
+                    headers: { "Content-Type": "application/json" }
+                });
                 const json = await res.json();
 
                 if (json.result === 'success') {
@@ -137,7 +145,7 @@ const EditRegistration = () => {
 
         try {
             const payload = {
-                apiSecret: API_SECRET,
+                // apiSecret: API_SECRET,
                 action: "update",
                 rowIndex: data.rowIndex,
                 competitions: data.competitions,
@@ -151,11 +159,10 @@ const EditRegistration = () => {
                 p3Name: data.p3Name, p3Phone: data.p3Phone, p3CNIC: data.p3CNIC,
             };
 
-            await fetch(SHEET_API_URL, {
+            await fetch("/api/submit", {
                 method: "POST",
                 body: JSON.stringify(payload),
-                mode: "no-cors",
-                headers: { "Content-Type": "text/plain" },
+                headers: { "Content-Type": "application/json" },
             });
             
             showNotification('success', 'Changes saved successfully!');
