@@ -249,6 +249,7 @@ const HxDRegistration = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 setLoading(false);
             } else {
+                localStorage.removeItem("hxd_form_progress"); // ✅ CLEAR DATA NOW
                 setSubmitted(true);
             }
 
