@@ -5,8 +5,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ result: "error", message: "Method not allowed" });
   }
 
-  // 2. Get the Secret Data from Server Environment Variables
-  // (These are NOT exposed to the frontend)
   const SHEET_API_URL = process.env.SHEET_API_URL;
   const API_SECRET = process.env.API_SECRET; 
 
@@ -15,15 +13,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const data = JSON.parse(req.body);
+    // 🔍 FIX: Check if body is already an object (Vercel parses it automatically)
+    const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
 
-    // 3. Attach the Secret Key securely here
     const payload = {
       ...data,
       apiSecret: API_SECRET 
     };
 
-    // 4. Send to Google Sheets
     const googleResponse = await fetch(SHEET_API_URL, {
       method: "POST",
       body: JSON.stringify(payload),
@@ -32,7 +29,6 @@ export default async function handler(req, res) {
 
     const googleResult = await googleResponse.json();
 
-    // 5. Return Google's response back to Frontend
     return res.status(200).json(googleResult);
 
   } catch (error) {
