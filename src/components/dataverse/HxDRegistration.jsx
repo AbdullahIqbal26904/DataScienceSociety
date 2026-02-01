@@ -4,16 +4,12 @@ import { Link } from 'react-router-dom';
 import dssLogo from '/assets/ds_logo.png'; 
 
 // --- CONFIGURATION ---
-// const SHEET_API_URL = import.meta.env.VITE_SHEET_API_URL;
-// const API_SECRET = import.meta.env.VITE_API_SECRET; // 🔒 Add this to your .env file!
-
 const PAYMENT_LINKS = {
     1: import.meta.env.VITE_PAYMENT_LINK_1,
     2: import.meta.env.VITE_PAYMENT_LINK_2,
     3: import.meta.env.VITE_PAYMENT_LINK_3
 };
 
-// ... (Your MODULES array remains exactly the same) ...
 const MODULES = [
     { id: 'game-dev', name: 'Game Dev', early: 500, normal: 1000 },
     { id: 'shark-tank', name: 'Shark Tank', early: 700, normal: 1500 },
@@ -51,15 +47,16 @@ const HxDRegistration = () => {
     const [file, setFile] = useState(null); 
 
     // --- 🔒 SANITIZER FUNCTION (Frontend) ---
-    // Removes < and > characters immediately to prevent HTML injection
     const sanitizeInput = (value) => {
-        // Regex removes: < > ; [ ] / \
         return value.replace(/[<>;\[\]\/\\\\]/g, "");
     };
     
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
         const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+        
+        if (!selectedFile) return;
+
         if (!allowedTypes.includes(selectedFile.type)) {
             setSubmitError("Invalid file type! Please upload a JPG, PNG, or PDF.");
             setFile(null);
@@ -68,7 +65,7 @@ const HxDRegistration = () => {
             return;
         }
         // 4MB Limit check
-        if (selectedFile && selectedFile.size > 4 * 1024 * 1024) {
+        if (selectedFile.size > 4 * 1024 * 1024) {
             setSubmitError("File is too big! Please use an image under 4MB.");
             window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to sticky error
             return;
@@ -90,7 +87,6 @@ const HxDRegistration = () => {
         p3Name: '', p3Phone: '', p3CNIC: '',
     });
 
-    // ... (Your Cost Effect remains same) ...
     useEffect(() => {
         let total = 0;
         formData.competitions.forEach(compName => {
@@ -103,7 +99,6 @@ const HxDRegistration = () => {
         setTotalCost(total);
     }, [formData.competitions, participantCount, isEarlyBird]);
 
-    // ... (validateField remains same) ...
     const validateField = (name, value) => {
         let errorMsg = null;
         const cnicRegex = /^\d{13}$/;
@@ -120,10 +115,8 @@ const HxDRegistration = () => {
         setErrors(prev => ({ ...prev, [name]: errorMsg }));
     };
 
-    // --- HANDLERS (Modified for Sanitization) ---
     const handleChange = (e) => {
         const { name, value } = e.target;
-        
         // 🔒 Apply Sanitization Immediately
         const cleanValue = sanitizeInput(value);
         
@@ -148,7 +141,6 @@ const HxDRegistration = () => {
         if (errors.competitions) setErrors(prev => ({ ...prev, competitions: null }));
     };
 
-    // --- VALIDATION HELPER ---
     const getValidationErrors = () => {
         let newErrors = {};
         const cnicRegex = /^\d{13}$/;
@@ -190,23 +182,18 @@ const HxDRegistration = () => {
         const validationErrors = getValidationErrors();
         
         if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors); // This shows errors on individual inputs
+            setErrors(validationErrors);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // This shows the summary in the sticky top bar
             const missingList = Object.values(validationErrors).join(", ");
             setSubmitError(`Please fix: ${missingList}`);
-            
             return;
         }
         if (!paymentClicked) {
             setSubmitError("Please click the Payment Link to initiate your transaction.");
-            // window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
         if (!file) {
             setSubmitError("Please upload a payment screenshot.");
-            // window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
 
@@ -216,7 +203,6 @@ const HxDRegistration = () => {
             const base64Image = await convertToBase64(file);
 
             const payload = { 
-                // apiSecret: API_SECRET, // 🔒 SENDING API KEY
                 ...formData, 
                 competition: formData.competitions.join(', '),
                 totalPaid: totalCost,
@@ -227,7 +213,7 @@ const HxDRegistration = () => {
 
            const response = await fetch("/api/submit", {
                 method: "POST",
-                body: JSON.stringify(payload), // No need for specific headers in Vercel functions usually
+                body: JSON.stringify(payload), 
             });
 
             const result = await response.json();
@@ -249,11 +235,9 @@ const HxDRegistration = () => {
     };
 
     if (submitted) {
-        // ... (Keep existing Success View) ...
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white p-4">
-               {/* ... (Success JSX from previous code) ... */}
-               <motion.div 
+                <motion.div 
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     className="text-center p-8 bg-gray-900 rounded-2xl border border-gray-800 shadow-2xl max-w-md w-full"
@@ -283,12 +267,12 @@ const HxDRegistration = () => {
 
     return (
         <div className="min-h-screen relative overflow-hidden font-sans text-gray-200">
-            {/* Background ... */}
+            {/* Background */}
             <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none bg-gray-950/70">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBtLTEgMGExIDEgMCAxIDAgMiAwIDEgMSAwIDEgMCAtMiAwIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDMiLz48L2c+PC9zdmc+')] opacity-40"></div>
             </div>
 
-            {/* 🔥 STICKY ERROR TOAST (Appears on top of everything) */}
+            {/* 🔥 STICKY ERROR TOAST */}
             <AnimatePresence>
                 {submitError && (
                     <motion.div 
@@ -309,7 +293,7 @@ const HxDRegistration = () => {
                 )}
             </AnimatePresence>
 
-            <div className="container mx-auto px-4 py-8 max-w-3xl pt-20"> {/* Added pt-20 to allow space for sticky toast */}
+            <div className="container mx-auto px-4 py-8 max-w-3xl pt-20">
                 
                 {/* Back Button */}
                 <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors group">
@@ -319,6 +303,16 @@ const HxDRegistration = () => {
                 
                 {/* Header */}
                 <div className="text-center mb-10">
+                    {/* --- ADDED: PRIZE POOL BADGE --- */}
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="mb-4 inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/40 shadow-[0_0_15px_rgba(234,179,8,0.1)]"
+                    >
+                        <span className="text-xl">🏆</span>
+                        <span className="text-yellow-400 font-bold uppercase tracking-wider text-sm">Prize Pool: PKR 400,000+</span>
+                    </motion.div>
+
                     <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Team Registration</h1>
                     <div className="inline-block mt-3 px-4 py-1 rounded-full bg-gray-800 border border-gray-700 text-sm">
                         {isEarlyBird ? <span className="text-green-400 font-semibold">✨ Early Bird Active</span> : <span className="text-yellow-500 font-semibold">Standard Pricing Active</span>}
@@ -326,49 +320,49 @@ const HxDRegistration = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* ... (Module Selection & Team Info & Participants stay exactly same) ... */}
-                    {/* COPY THE MODULES, TEAM INFO, AND PARTICIPANTS DIVS FROM PREVIOUS CODE HERE */}
-                    {/* I've excluded them for brevity since you said "don't remove stuff", just assume they are here as before */}
-                 {/* MODULES SELECTION */}
-<div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
-    <h3 className="text-xl font-semibold text-purple-400 mb-4 flex items-center gap-2">
-        Select Modules
-        {/* 1. ADDED: Per Person Disclaimer */}
-        <span className="text-xs font-normal text-gray-500 mt-1">(Prices are per person)</span>
-    </h3>
-    
-    <div className="grid gap-3">
-        {MODULES.map((mod) => (
-            <label key={mod.id} className={`relative flex items-center p-3 rounded-xl cursor-pointer transition-all border ${formData.competitions.includes(mod.name) ? 'bg-purple-900/20 border-purple-500/50' : 'bg-gray-800/50 border-gray-700 hover:border-gray-600'}`}>
-                <input type="checkbox" className="w-5 h-5 accent-purple-500 rounded focus:ring-purple-500/30" checked={formData.competitions.includes(mod.name)} onChange={() => toggleModule(mod.name)} />
-                <div className="ml-4 flex-1">
-                    <div className="flex justify-between items-center">
-                        <span className={`font-medium ${formData.competitions.includes(mod.name) ? 'text-white' : 'text-gray-300'}`}>{mod.name}</span>
+                    {/* MODULES SELECTION */}
+                    <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+                        <h3 className="text-xl font-semibold text-purple-400 mb-4 flex items-center gap-2">
+                            Select Modules
+                            <span className="text-xs font-normal text-gray-500 mt-1">(Prices are per person)</span>
+                        </h3>
                         
-                        {/* 2. MODIFIED: Price Section Container */}
-                        <div className="text-right flex flex-col items-end">
-                            
-                            {/* 3. ADDED: Strike-through Logic for Early Bird */}
-                            {isEarlyBird && (
-                                <span className="text-[10px] text-gray-500 line-through decoration-red-500/50">
-                                    Rs {mod.normal}
-                                </span>
-                            )}
-                            
-                            {/* 4. MODIFIED: Price Label with "/ person" */}
-                            <span className={`font-mono text-sm px-2 py-0.5 rounded flex items-center gap-1 ${isEarlyBird ? 'text-green-400 bg-green-400/10' : 'text-yellow-400 bg-yellow-400/10'}`}>
-                                Rs {isEarlyBird ? mod.early : mod.normal} 
-                                <span className="text-[10px] opacity-70 font-sans">/ person</span>
-                            </span>
+                        {/* --- ADDED: SCHEDULING NOTE --- */}
+                        <div className="mt-3 mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-start gap-3">
+                            <span className="text-blue-400 text-sm">📅</span>
+                            <p className="text-xs text-blue-200/80 leading-relaxed">
+                                <strong>Important:</strong> All modules will be conducted <strong>simultaneously</strong>. Please ensure you do not select multiple modules if you are the only participant.
+                            </p>
                         </div>
+                        
+                        <div className="grid gap-3">
+                            {MODULES.map((mod) => (
+                                <label key={mod.id} className={`relative flex items-center p-3 rounded-xl cursor-pointer transition-all border ${formData.competitions.includes(mod.name) ? 'bg-purple-900/20 border-purple-500/50' : 'bg-gray-800/50 border-gray-700 hover:border-gray-600'}`}>
+                                    <input type="checkbox" className="w-5 h-5 accent-purple-500 rounded focus:ring-purple-500/30" checked={formData.competitions.includes(mod.name)} onChange={() => toggleModule(mod.name)} />
+                                    <div className="ml-4 flex-1">
+                                        <div className="flex justify-between items-center">
+                                            <span className={`font-medium ${formData.competitions.includes(mod.name) ? 'text-white' : 'text-gray-300'}`}>{mod.name}</span>
+                                            
+                                            <div className="text-right flex flex-col items-end">
+                                                {isEarlyBird && (
+                                                    <span className="text-[10px] text-gray-500 line-through decoration-red-500/50">
+                                                        Rs {mod.normal}
+                                                    </span>
+                                                )}
+                                                <span className={`font-mono text-sm px-2 py-0.5 rounded flex items-center gap-1 ${isEarlyBird ? 'text-green-400 bg-green-400/10' : 'text-yellow-400 bg-yellow-400/10'}`}>
+                                                    Rs {isEarlyBird ? mod.early : mod.normal} 
+                                                    <span className="text-[10px] opacity-70 font-sans">/ person</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+                            ))}
+                        </div>
+                        {errors.competitions && <p className="text-red-400 text-sm mt-2">⚠ {errors.competitions}</p>}
                     </div>
-                </div>
-            </label>
-        ))}
-    </div>
-    {errors.competitions && <p className="text-red-400 text-sm mt-2">⚠ {errors.competitions}</p>}
-</div>
 
+                    {/* TEAM DETAILS */}
                     <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
                         <h3 className="text-xl font-semibold text-purple-400 mb-4">Team Details</h3>
                         <div className="grid md:grid-cols-2 gap-4">
@@ -377,14 +371,18 @@ const HxDRegistration = () => {
                         </div>
                     </div>
 
+                    {/* PARTICIPANTS SECTION */}
                     <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
-                        <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-                            <h3 className="text-xl font-semibold text-blue-400">Participants ({participantCount})</h3>
-                            <span className="text-xs text-gray-500">Multiplier: x{participantCount}</span>
+                        <div className="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                            <h3 className="text-xl font-semibold text-blue-400">Participants</h3>
+                            <span className="text-xs font-bold text-gray-400 bg-gray-800 px-3 py-1 rounded-full border border-gray-700">
+                                {participantCount} / 3 Members
+                            </span>
                         </div>
+
                         {/* Leader */}
                         <div className="mb-6">
-                            <h4 className="text-sm font-bold text-gray-300 mb-3 uppercase">Team Lead</h4>
+                            <h4 className="text-sm font-bold text-gray-300 mb-3 uppercase tracking-wider">Team Lead</h4>
                             <div className="grid md:grid-cols-2 gap-4">
                                 <InputGroup label="Full Name" name="leadName" value={formData.leadName} onChange={handleChange} onBlur={handleBlur} error={errors.leadName} required />
                                 <InputGroup label="Phone Number" name="leadPhone" value={formData.leadPhone} onChange={handleChange} onBlur={handleBlur} error={errors.leadPhone} required />
@@ -392,11 +390,67 @@ const HxDRegistration = () => {
                                 <InputGroup label="CNIC (13 digits)" name="leadCNIC" value={formData.leadCNIC} onChange={handleChange} onBlur={handleBlur} error={errors.leadCNIC} required />
                             </div>
                         </div>
-                        {/* Participants logic (P2/P3/Buttons) remains exactly same... */}
-                        {/* ... */}
+
+                        {/* Participant 2 - Slides down when count increases */}
+                        <AnimatePresence>
+                            {participantCount >= 2 && (
+                                <motion.div 
+                                    initial={{ opacity: 0, height: 0 }} 
+                                    animate={{ opacity: 1, height: 'auto' }} 
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="mb-6 pt-6 border-t border-gray-800 overflow-hidden"
+                                >
+                                    <div className="flex justify-between items-center mb-3">
+                                        <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider">Participant 02</h4>
+                                        <button type="button" onClick={() => setParticipantCount(1)} className="text-xs text-red-400 hover:text-red-300">Remove ✕</button>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <InputGroup label="Full Name" name="p2Name" value={formData.p2Name} onChange={handleChange} onBlur={handleBlur} error={errors.p2Name} required />
+                                        <InputGroup label="Phone Number" name="p2Phone" value={formData.p2Phone} onChange={handleChange} onBlur={handleBlur} error={errors.p2Phone} required />
+                                        <InputGroup label="CNIC (13 digits)" name="p2CNIC" value={formData.p2CNIC} onChange={handleChange} onBlur={handleBlur} error={errors.p2CNIC} required />
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Participant 3 - Slides down when count increases */}
+                        <AnimatePresence>
+                            {participantCount >= 3 && (
+                                <motion.div 
+                                    initial={{ opacity: 0, height: 0 }} 
+                                    animate={{ opacity: 1, height: 'auto' }} 
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="mb-6 pt-6 border-t border-gray-800 overflow-hidden"
+                                >
+                                    <div className="flex justify-between items-center mb-3">
+                                        <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider">Participant 03</h4>
+                                        <button type="button" onClick={() => setParticipantCount(2)} className="text-xs text-red-400 hover:text-red-300">Remove ✕</button>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <InputGroup label="Full Name" name="p3Name" value={formData.p3Name} onChange={handleChange} onBlur={handleBlur} error={errors.p3Name} required />
+                                        <InputGroup label="Phone Number" name="p3Phone" value={formData.p3Phone} onChange={handleChange} onBlur={handleBlur} error={errors.p3Phone} required />
+                                        <InputGroup label="CNIC (13 digits)" name="p3CNIC" value={formData.p3CNIC} onChange={handleChange} onBlur={handleBlur} error={errors.p3CNIC} required />
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* --- ADD BUTTON SECTION --- */}
+                        {participantCount < 3 && (
+                            <motion.button
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                type="button"
+                                onClick={() => setParticipantCount(prev => prev + 1)}
+                                className="w-full py-3 mt-2 border border-dashed border-gray-600 rounded-xl text-gray-400 hover:text-white hover:border-blue-500 hover:bg-blue-500/10 transition-all flex items-center justify-center gap-2 group"
+                            >
+                                <span className="w-6 h-6 rounded-full bg-gray-800 group-hover:bg-blue-500 flex items-center justify-center text-lg leading-none transition-colors">+</span>
+                                <span>Add Participant</span>
+                            </motion.button>
+                        )}
                     </div>
 
-                    {/* --- UPDATED PAYMENT SECTION --- */}
+                    {/* PAYMENT SECTION */}
                     <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
                         <h3 className="text-xl font-semibold text-white mb-4">Payment Verification</h3>
                         
@@ -407,7 +461,6 @@ const HxDRegistration = () => {
                                 <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
                             </div>
                             
-                            {/* CHANGED: Explicit Link Text + Hover Effect */}
                             <a 
                                 href={PAYMENT_LINKS[participantCount]} 
                                 target="_blank" 
