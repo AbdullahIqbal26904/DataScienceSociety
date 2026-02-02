@@ -557,6 +557,7 @@ const HxDRegistration = () => {
 
                     {/* PAYMENT SECTION */}
 {/* PAYMENT SECTION */}
+{/* PAYMENT SECTION */}
 <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
     <h3 className="text-xl font-semibold text-white mb-4">Payment Verification</h3>
 
@@ -578,23 +579,13 @@ const HxDRegistration = () => {
         </button>
     </div>
 
-    {/* 🔥 COMPACT WARNING: Appears AFTER clicking */}
-    <AnimatePresence>
-        {paymentClicked && (
-            <motion.div 
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="mb-6 overflow-hidden"
-            >
-                <div className="flex items-center gap-3 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg">
-                    <span className="text-2xl animate-pulse">⚠️</span>
-                    <p className="text-sm text-yellow-100 font-medium">
-                        Link opened! Please complete your payment, then <strong>come back here</strong> to upload the screenshot below.
-                    </p>
-                </div>
-            </motion.div>
-        )}
-    </AnimatePresence>
+    {/* 🔥 ALWAYS VISIBLE WARNING (No conditional hiding) */}
+    <div className="mb-6 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg flex items-center gap-3">
+        <span className="text-2xl">⚠️</span>
+        <p className="text-sm text-yellow-100 font-medium leading-tight">
+            The payment link opens in a new tab. Please complete your transaction there, then <strong>come back here</strong> to upload the screenshot below.
+        </p>
+    </div>
 
     {/* Policies */}
     <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg mb-6">
