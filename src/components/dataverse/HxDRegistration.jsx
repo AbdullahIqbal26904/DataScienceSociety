@@ -7,19 +7,21 @@ import dssLogo from '/assets/ds_logo.png';
 const PAYMENT_LINKS = {
     1: import.meta.env.VITE_PAYMENT_LINK_1,
     2: import.meta.env.VITE_PAYMENT_LINK_2,
-    3: import.meta.env.VITE_PAYMENT_LINK_3
+    3: import.meta.env.VITE_PAYMENT_LINK_3,
+    4: import.meta.env.VITE_PAYMENT_LINK_4 // ✅ Added Link for 4 People
 };
 
+// ✅ Added 'max' property to enforce limits
 const MODULES = [
-    { id: 'game-dev', name: 'Game Dev', early: 500, normal: 1000 },
-    { id: 'shark-tank', name: 'Shark Tank', early: 700, normal: 1500 },
-    { id: 'csi', name: 'Crime Scene Investigation', early: 500, normal: 1000 },
-    { id: 'gen-ai', name: 'Gen AI', early: 500, normal: 1000 },
-    { id: 'ml', name: 'Machine Learning', early: 700, normal: 1500 },
-    { id: 'ui-ux', name: 'UI/UX', early: 500, normal: 1000 },
-    { id: 'cp', name: 'Competitive Programming', early: 700, normal: 1500 },
-    { id: 'data', name: 'Data Analytics', early: 500, normal: 1000 },
-    { id: 'web-dev', name: 'Web Development', early: 500, normal: 1000 },
+    { id: 'game-dev', name: 'Game Dev', early: 500, normal: 1000, max: 3 },
+    { id: 'shark-tank', name: 'Shark Tank', early: 700, normal: 1500, max: 4 }, // 🦈 Only one allowing 4
+    { id: 'csi', name: 'Crime Scene Investigation', early: 500, normal: 1000, max: 3 },
+    { id: 'gen-ai', name: 'Gen AI', early: 500, normal: 1000, max: 3 },
+    { id: 'ml', name: 'Machine Learning', early: 700, normal: 1500, max: 3 },
+    { id: 'ui-ux', name: 'UI/UX', early: 500, normal: 1000, max: 2 }, // ⚠️ Limit 2
+    { id: 'cp', name: 'Competitive Programming', early: 700, normal: 1500, max: 3 },
+    { id: 'data', name: 'Data Analytics', early: 500, normal: 1000, max: 2 }, // ⚠️ Limit 2
+    { id: 'web-dev', name: 'Web Development', early: 500, normal: 1000, max: 3 },
 ];
 
 const convertToBase64 = (file) => {
@@ -40,13 +42,12 @@ const HxDRegistration = () => {
     const [totalCost, setTotalCost] = useState(0);
     const [isEarlyBird, setIsEarlyBird] = useState(true);
     const [paymentClicked, setPaymentClicked] = useState(false);
-    // Custom Error Message State
     const [submitError, setSubmitError] = useState(null);
 
     // --- FILE STATE ---
     const [file, setFile] = useState(null); 
 
-    // --- 🔒 SANITIZER FUNCTION (Frontend) ---
+    // --- 🔒 SANITIZER FUNCTION ---
     const sanitizeInput = (value) => {
         return value.replace(/[<>;\[\]\/\\\\]/g, "");
     };
@@ -60,14 +61,13 @@ const HxDRegistration = () => {
         if (!allowedTypes.includes(selectedFile.type)) {
             setSubmitError("Invalid file type! Please upload a JPG, PNG, or PDF.");
             setFile(null);
-            e.target.value = null; // Reset input
+            e.target.value = null;
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
-        // 4MB Limit check
         if (selectedFile.size > 4 * 1024 * 1024) {
             setSubmitError("File is too big! Please use an image under 4MB.");
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to sticky error
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
         setFile(selectedFile);
@@ -85,6 +85,7 @@ const HxDRegistration = () => {
         leadName: '', leadPhone: '', leadEmail: '', leadCNIC: '',
         p2Name: '', p2Phone: '', p2CNIC: '',
         p3Name: '', p3Phone: '', p3CNIC: '',
+        p4Name: '', p4Phone: '', p4CNIC: '', // ✅ Added Participant 4 fields
     });
 
     useEffect(() => {
@@ -92,10 +93,7 @@ const HxDRegistration = () => {
         if (savedData) {
             try {
                 const parsed = JSON.parse(savedData);
-                // Merge saved data with default structure to avoid undefined errors
                 setFormData(prev => ({ ...prev, ...parsed.formData }));
-                
-                // Only restore valid booleans/numbers
                 if (parsed.paymentClicked !== undefined) setPaymentClicked(parsed.paymentClicked);
                 if (parsed.participantCount) setParticipantCount(parsed.participantCount);
             } catch (e) {
@@ -104,15 +102,11 @@ const HxDRegistration = () => {
         }
     }, []);
 
-    // 2. AUTO-SAVE DATA WHEN IT CHANGES
     useEffect(() => {
-        const dataToSave = {
-            formData,
-            paymentClicked,
-            participantCount
-        };
+        const dataToSave = { formData, paymentClicked, participantCount };
         localStorage.setItem("hxd_form_progress", JSON.stringify(dataToSave));
     }, [formData, paymentClicked, participantCount]);
+
     useEffect(() => {
         let total = 0;
         formData.competitions.forEach(compName => {
@@ -124,6 +118,37 @@ const HxDRegistration = () => {
         });
         setTotalCost(total);
     }, [formData.competitions, participantCount, isEarlyBird]);
+// 🔥 NEW: Auto-Correct Participant Count if Module Selection Changes
+    // useEffect(() => {
+    //     const allowedMax = getMaxTeamSize();
+        
+    //     // If we have more participants than allowed, cut them off
+    //     if (participantCount > allowedMax) {
+    //         setParticipantCount(allowedMax);
+            
+    //         // Optional: Clear the data for the removed participants so it doesn't send hidden data
+    //         setFormData(prev => ({
+    //             ...prev,
+    //             ...(allowedMax < 4 ? { p4Name: '', p4Phone: '', p4CNIC: '' } : {}),
+    //             ...(allowedMax < 3 ? { p3Name: '', p3Phone: '', p3CNIC: '' } : {}),
+    //             ...(allowedMax < 2 ? { p2Name: '', p2Phone: '', p2CNIC: '' } : {})
+    //         }));
+    //     }
+    // }, [formData.competitions]); // Runs whenever modules change
+    // 🔥 HELPER: Calculate Allowed Team Size based on selection
+    const getMaxTeamSize = () => {
+        if (formData.competitions.length === 0) return 3; // Default
+        
+        // Map selected module names to their 'max' values
+        const limits = formData.competitions.map(compName => {
+            const mod = MODULES.find(m => m.name === compName);
+            return mod ? mod.max : 3;
+        });
+
+        // The limit is the LOWEST of all selected (intersection)
+        // e.g., Shark Tank (4) + UI/UX (2) = Max 2 allowed for that team
+        return Math.min(...limits);
+    };
 
     const validateField = (name, value) => {
         let errorMsg = null;
@@ -143,9 +168,7 @@ const HxDRegistration = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // 🔒 Apply Sanitization Immediately
         const cleanValue = sanitizeInput(value);
-        
         setFormData(prev => ({ ...prev, [name]: cleanValue }));
         if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
     };
@@ -178,63 +201,67 @@ const HxDRegistration = () => {
         if (!formData.institute.trim()) newErrors.institute = "Institute";
         if (formData.competitions.length === 0) newErrors.competitions = "Modules";
 
+        // 🔥 CHECK MAX LIMIT
+        const allowedMax = getMaxTeamSize();
+        if (participantCount > allowedMax) {
+            newErrors.competitions = `You have ${participantCount} members, but one of your modules only allows ${allowedMax}.`;
+        }
+
         // Lead Validation
         if (!formData.leadName.trim()) newErrors.leadName = "Lead Name";
         if (!emailRegex.test(formData.leadEmail)) newErrors.leadEmail = "Lead Email";
         if (!phoneRegex.test(formData.leadPhone.replace(/-/g, ''))) newErrors.leadPhone = "Lead Phone";
         if (!cnicRegex.test(formData.leadCNIC.replace(/-/g, ''))) newErrors.leadCNIC = "Lead CNIC";
 
-        // Participant 2 Validation
+        // Participant 2
         if (participantCount >= 2) {
             if (!formData.p2Name.trim()) newErrors.p2Name = "P2 Name";
             if (!phoneRegex.test(formData.p2Phone.replace(/-/g, ''))) newErrors.p2Phone = "P2 Phone";
             if (!cnicRegex.test(formData.p2CNIC.replace(/-/g, ''))) newErrors.p2CNIC = "P2 CNIC";
         }
 
-        // Participant 3 Validation
+        // Participant 3
         if (participantCount >= 3) {
             if (!formData.p3Name.trim()) newErrors.p3Name = "P3 Name";
             if (!phoneRegex.test(formData.p3Phone.replace(/-/g, ''))) newErrors.p3Phone = "P3 Phone";
             if (!cnicRegex.test(formData.p3CNIC.replace(/-/g, ''))) newErrors.p3CNIC = "P3 CNIC";
         }
 
+        // ✅ Participant 4
+        if (participantCount >= 4) {
+            if (!formData.p4Name.trim()) newErrors.p4Name = "P4 Name";
+            if (!phoneRegex.test(formData.p4Phone.replace(/-/g, ''))) newErrors.p4Phone = "P4 Phone";
+            if (!cnicRegex.test(formData.p4CNIC.replace(/-/g, ''))) newErrors.p4CNIC = "P4 CNIC";
+        }
+
         return newErrors;
     };
-// 🔥 UPDATED: HANDLE PAYMENT CLICK (With Full Validation)
+
     const handlePaymentClick = async (e) => {
         e.preventDefault(); 
-        setSubmitError(null); // Clear any old errors
+        setSubmitError(null); 
 
-        // 1. RUN FULL VALIDATION
-        // We strictly check everything (CNIC regex, Phone formats, Module selection)
-        // before letting them pay.
         const validationErrors = getValidationErrors();
         
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Create a readable list of missing fields for the error toast
             const missingList = Object.values(validationErrors).join(", ");
-            setSubmitError(`Please fix these errors before paying: ${missingList}`);
-            return; // 🛑 STOP. Do not open the payment link.
+            setSubmitError(`Please fix errors: ${missingList}`);
+            return; 
         }
 
-        // 2. IF VALID, PROCEED
         setPaymentClicked(true); 
 
-        // 3. Prepare "Draft" Payload
         const payload = { 
             ...formData, 
             competition: formData.competitions.join(', '),
             totalPaid: totalCost,
             participantCount: participantCount,
-            status: 'PENDING_PAYMENT', // Status: DRAFT
+            status: 'PENDING_PAYMENT', 
             image: null 
         };
 
-        // 4. Fire & Forget Request 
-        // We save the valid data now, so if they pay but don't return, we have their info.
         try {
             fetch("/api/submit", {
                 method: "POST",
@@ -245,11 +272,9 @@ const HxDRegistration = () => {
             console.error("Draft save failed", err);
         }
 
-        // 5. Open Payment Link
-        // 5. Open Payment Link & Remind User
         window.open(PAYMENT_LINKS[participantCount], '_blank');
-        
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitError(null);
@@ -281,13 +306,16 @@ const HxDRegistration = () => {
                 ...formData, 
                 competition: formData.competitions.join(', '),
                 totalPaid: totalCost,
+                participantCount: participantCount, // ✅ Sends 1, 2, 3, or 4
+                status: 'VERIFICATION_NEEDED', 
                 image: base64Image,
                 imageName: file.name,
                 mimeType: file.type
             };
 
-           const response = await fetch("/api/submit", {
+            const response = await fetch("/api/submit", {
                 method: "POST",
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload), 
             });
 
@@ -298,7 +326,7 @@ const HxDRegistration = () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 setLoading(false);
             } else {
-                localStorage.removeItem("hxd_form_progress"); // ✅ CLEAR DATA NOW
+                localStorage.removeItem("hxd_form_progress"); 
                 setSubmitted(true);
             }
 
@@ -313,41 +341,40 @@ const HxDRegistration = () => {
     if (submitted) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white p-4">
-    <motion.div 
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="text-center p-8 bg-gray-900 rounded-2xl border border-gray-800 shadow-2xl max-w-md w-full"
-    >
-        <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 p-1 border border-gray-700">
-            <img src={dssLogo} alt="Logo" className="w-full h-full object-cover rounded-full" />
-        </div>
-        
-        <h2 className="text-3xl font-bold text-green-400 mb-2">Registration Submitted!</h2>
-        <p className="text-gray-300 mb-6">We have received your details.</p>
-        
-        {/* Updated Verification Message */}
-        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-left">
-            <div className="flex gap-3">
-                <span className="text-xl">⏳</span>
-                <div>
-                    <p className="text-blue-200 font-semibold text-sm">Verification in Progress</p>
-                    <p className="text-blue-200/70 text-xs mt-1 leading-relaxed">
-                        We will verify your payment proof shortly. Once approved, you will receive a confirmation email from <strong>dss.iba</strong>.
-                    </p>
-                </div>
-            </div>
-        </div>
+                <motion.div 
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="text-center p-8 bg-gray-900 rounded-2xl border border-gray-800 shadow-2xl max-w-md w-full"
+                >
+                    <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 p-1 border border-gray-700">
+                        <img src={dssLogo} alt="Logo" className="w-full h-full object-cover rounded-full" />
+                    </div>
+                    
+                    <h2 className="text-3xl font-bold text-green-400 mb-2">Registration Submitted!</h2>
+                    <p className="text-gray-300 mb-6">We have received your details.</p>
+                    
+                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-left">
+                        <div className="flex gap-3">
+                            <span className="text-xl">⏳</span>
+                            <div>
+                                <p className="text-blue-200 font-semibold text-sm">Verification in Progress</p>
+                                <p className="text-blue-200/70 text-xs mt-1 leading-relaxed">
+                                    We will verify your payment proof shortly. Once approved, you will receive a confirmation email from <strong>dss.iba</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
-        <div className="flex flex-col md:flex-row justify-center gap-4 mt-8 w-full">
-            <button onClick={() => window.location.reload()} className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-medium w-full md:w-auto">
-                Register Another Team
-            </button>
-            <Link to="/" className="px-6 py-3 bg-transparent border border-gray-700 hover:bg-gray-800 text-gray-300 rounded-xl text-sm font-medium w-full md:w-auto text-center">
-                Return Home
-            </Link>
-        </div>
-    </motion.div>
-</div>
+                    <div className="flex flex-col md:flex-row justify-center gap-4 mt-8 w-full">
+                        <button onClick={() => window.location.reload()} className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-medium w-full md:w-auto">
+                            Register Another Team
+                        </button>
+                        <Link to="/" className="px-6 py-3 bg-transparent border border-gray-700 hover:bg-gray-800 text-gray-300 rounded-xl text-sm font-medium w-full md:w-auto text-center">
+                            Return Home
+                        </Link>
+                    </div>
+                </motion.div>
+            </div>
         );
     }
 
@@ -358,7 +385,6 @@ const HxDRegistration = () => {
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBtLTEgMGExIDEgMCAxIDAgMiAwIDEgMSAwIDEgMCAtMiAwIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDMiLz48L2c+PC9zdmc+')] opacity-40"></div>
             </div>
 
-            {/* 🔥 STICKY ERROR TOAST */}
             <AnimatePresence>
                 {submitError && (
                     <motion.div 
@@ -381,15 +407,12 @@ const HxDRegistration = () => {
 
             <div className="container mx-auto px-4 py-8 max-w-3xl pt-20">
                 
-                {/* Back Button */}
                 <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors group">
                     <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                     <span>Back to Home</span>
                 </Link>
                 
-                {/* Header */}
                 <div className="text-center mb-10">
-                    {/* --- ADDED: PRIZE POOL BADGE --- */}
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -413,32 +436,14 @@ const HxDRegistration = () => {
                             <span className="text-xs font-normal text-gray-500 mt-1">(Prices are per person)</span>
                         </h3>
                         
-                        {/* --- ADDED: SCHEDULING NOTE --- */}
                         <div className="mt-3 mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-start gap-3">
-  {/* Icon: Added mt-0.5 for better alignment with the top line of text */}
-  <span className="text-blue-400 text-sm mt-0.5">📅</span>
-
-  {/* Text Container: This wrapper ensures the text stacks vertically */}
-  <div className="flex-1 space-y-2">
-    <p className="text-xs text-blue-200/80 leading-relaxed">
-      <strong>Important:</strong> All modules will be conducted{" "}
-      <strong>simultaneously</strong>. Please ensure you do not select
-      multiple modules if you are the only participant.
-    </p>
-
-    <p className="text-xs text-blue-200/80">
-      For any problems or queries, WhatsApp:{" "}
-      <a
-        href="https://wa.me/923350864555"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline hover:text-white transition-colors whitespace-nowrap"
-      >
-        +92 335 0864555
-      </a>
-    </p>
-  </div>
-</div>
+                            <span className="text-blue-400 text-sm mt-0.5">📅</span>
+                            <div className="flex-1 space-y-2">
+                                <p className="text-xs text-blue-200/80 leading-relaxed">
+                                    <strong>Important:</strong> All modules will be conducted <strong>simultaneously</strong>.
+                                </p>
+                            </div>
+                        </div>
                         
                         <div className="grid gap-3">
                             {MODULES.map((mod) => (
@@ -446,7 +451,11 @@ const HxDRegistration = () => {
                                     <input type="checkbox" className="w-5 h-5 accent-purple-500 rounded focus:ring-purple-500/30" checked={formData.competitions.includes(mod.name)} onChange={() => toggleModule(mod.name)} />
                                     <div className="ml-4 flex-1">
                                         <div className="flex justify-between items-center">
-                                            <span className={`font-medium ${formData.competitions.includes(mod.name) ? 'text-white' : 'text-gray-300'}`}>{mod.name}</span>
+                                            <span className={`font-medium ${formData.competitions.includes(mod.name) ? 'text-white' : 'text-gray-300'}`}>
+                                                {mod.name} 
+                                                {/* Show Max Count Badge */}
+                                                <span className="ml-2 text-[10px] uppercase bg-gray-700 text-gray-400 px-1.5 py-0.5 rounded border border-gray-600">Max {mod.max}</span>
+                                            </span>
                                             
                                             <div className="text-right flex flex-col items-end">
                                                 {isEarlyBird && (
@@ -481,7 +490,7 @@ const HxDRegistration = () => {
                         <div className="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
                             <h3 className="text-xl font-semibold text-blue-400">Participants</h3>
                             <span className="text-xs font-bold text-gray-400 bg-gray-800 px-3 py-1 rounded-full border border-gray-700">
-                                {participantCount} / 3 Members
+                                {participantCount} Member{participantCount > 1 ? 's' : ''}
                             </span>
                         </div>
 
@@ -496,7 +505,7 @@ const HxDRegistration = () => {
                             </div>
                         </div>
 
-                        {/* Participant 2 - Slides down when count increases */}
+                        {/* P2 */}
                         <AnimatePresence>
                             {participantCount >= 2 && (
                                 <motion.div 
@@ -518,7 +527,7 @@ const HxDRegistration = () => {
                             )}
                         </AnimatePresence>
 
-                        {/* Participant 3 - Slides down when count increases */}
+                        {/* P3 */}
                         <AnimatePresence>
                             {participantCount >= 3 && (
                                 <motion.div 
@@ -540,8 +549,30 @@ const HxDRegistration = () => {
                             )}
                         </AnimatePresence>
 
-                        {/* --- ADD BUTTON SECTION --- */}
-                        {participantCount < 3 && (
+                         {/* ✅ P4: Only for Shark Tank */}
+                         <AnimatePresence>
+                            {participantCount >= 4 && (
+                                <motion.div 
+                                    initial={{ opacity: 0, height: 0 }} 
+                                    animate={{ opacity: 1, height: 'auto' }} 
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="mb-6 pt-6 border-t border-gray-800 overflow-hidden"
+                                >
+                                    <div className="flex justify-between items-center mb-3">
+                                        <h4 className="text-sm font-bold text-blue-400 uppercase tracking-wider">Participant 04 (Shark Tank Only)</h4>
+                                        <button type="button" onClick={() => setParticipantCount(3)} className="text-xs text-red-400 hover:text-red-300">Remove ✕</button>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <InputGroup label="Full Name" name="p4Name" value={formData.p4Name} onChange={handleChange} onBlur={handleBlur} error={errors.p4Name} required />
+                                        <InputGroup label="Phone Number" name="p4Phone" value={formData.p4Phone} onChange={handleChange} onBlur={handleBlur} error={errors.p4Phone} required />
+                                        <InputGroup label="CNIC (13 digits)" name="p4CNIC" value={formData.p4CNIC} onChange={handleChange} onBlur={handleBlur} error={errors.p4CNIC} required />
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* DYNAMIC ADD BUTTON */}
+                        {participantCount < getMaxTeamSize() && (
                             <motion.button
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
@@ -553,60 +584,66 @@ const HxDRegistration = () => {
                                 <span>Add Participant</span>
                             </motion.button>
                         )}
+                        
+                        {/* WARNING IF LIMIT REACHED */}
+                        {participantCount === getMaxTeamSize() && (
+                            <p className="text-center text-xs text-gray-500 mt-2">
+                                Max Limit Reached for selected modules.
+                            </p>
+                        )}
                     </div>
 
                     {/* PAYMENT SECTION */}
-{/* PAYMENT SECTION */}
-{/* PAYMENT SECTION */}
-<div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
-    <h3 className="text-xl font-semibold text-white mb-4">Payment Verification</h3>
+                    <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+                        <h3 className="text-xl font-semibold text-white mb-4">Payment Verification</h3>
 
-    <div className="bg-gray-950/50 p-4 rounded-lg mb-4 border border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div className="text-left w-full">
-            <p className="text-gray-400 text-sm">Total Amount:</p>
-            <div className="text-2xl font-bold text-green-400">Rs {totalCost}</div>
-            <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
-        </div>
-        
-        {/* BUTTON */}
-        <button 
-            type="button" 
-            onClick={handlePaymentClick}
-            className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-lg text-center shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
-        >
-            <span>Click here to Pay</span>
-            <span className="text-lg">↗</span>
-        </button>
-    </div>
+                        <div className="bg-gray-950/50 p-4 rounded-lg mb-4 border border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div className="text-left w-full">
+                                <p className="text-gray-400 text-sm">Total Amount:</p>
+                                <div className="text-2xl font-bold text-green-400">Rs {totalCost}</div>
+                                <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
+                            </div>
+                            
+                            {/* BUTTON */}
+                            <button 
+                                type="button" 
+                                onClick={handlePaymentClick}
+                                className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-lg text-center shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                            >
+                                <span>Click here to Pay</span>
+                                <span className="text-lg">↗</span>
+                            </button>
+                        </div>
 
-    {/* 🔥 ALWAYS VISIBLE WARNING (No conditional hiding) */}
-    <div className="mb-6 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg flex items-center gap-3">
-        <span className="text-2xl">⚠️</span>
-        <p className="text-sm text-yellow-100 font-medium leading-tight">
-            The payment link opens in a new tab. Please complete your transaction there, then <strong>come back here</strong> to upload the screenshot below.
-        </p>
-    </div>
+                        {/* 🔥 ALWAYS VISIBLE WARNING */}
+                        <div className="mb-6 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg flex items-center gap-3">
+                            <span className="text-2xl">⚠️</span>
+                            <p className="text-sm text-yellow-100 font-medium leading-tight">
+                                The payment link opens in a new tab. Please complete your transaction there, then <strong>come back here</strong> to upload the screenshot below.
+                            </p>
+                        </div>
 
-    {/* Policies */}
-    <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg mb-6">
-        <div className="flex items-start gap-2">
-            <span className="text-red-400 mt-0.5">⚠️</span>
-            <ul className="text-xs text-red-200/80 list-disc list-inside space-y-1">
-                <li><strong>No Refund Policy:</strong> Registration fees are strictly non-refundable.</li>
-                <li><strong>Entry Requirement:</strong> No entry will be allowed without verified payment.</li>
-            </ul>
-        </div>
-    </div>
+                        {/* Policies */}
+                        <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg mb-6">
+                            <div className="flex items-start gap-2">
+                                <span className="text-red-400 mt-0.5">⚠️</span>
+                                <ul className="text-xs text-red-200/80 list-disc list-inside space-y-1">
+                                    <li><strong>No Refund Policy:</strong> Registration fees are strictly non-refundable.</li>
+                                    <li><strong>Entry Requirement:</strong> No entry will be allowed without verified payment.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-    {/* File Upload */}
-    <div className="flex flex-col relative">
-        <label className="text-sm text-gray-400 mb-1">
-            Payment Screenshot with reference number (Max 4MB) <span className="text-red-400">*</span>
-        </label>
-        <input type="file" accept="image/*" onChange={handleFileChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" />
-        <p className="text-xs text-gray-500 mt-2">Upload a clear screenshot of your transaction. {file && <span className="text-green-400 ml-2">✓ Selected: {file.name}</span>}</p>
-    </div>
-</div>
+                        {/* File Upload */}
+                        <div className="flex flex-col relative">
+                            <label className="text-sm text-gray-400 mb-1">
+                                Payment Screenshot with reference number (Max 4MB) <span className="text-red-400">*</span>
+                            </label>
+                            <input type="file" accept="image/*" onChange={handleFileChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" />
+                            <p className="text-xs text-gray-500 mt-2">Upload a clear screenshot of your transaction. {file && <span className="text-green-400 ml-2">✓ Selected: {file.name}</span>}</p>
+                        </div>
+                    </div>
+
                     <button type="submit" disabled={loading} className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-lg rounded-xl shadow-lg shadow-purple-900/20 transition-all transform active:scale-95 disabled:opacity-50">
                         {loading ? 'Submitting...' : 'Complete Registration'}
                     </button>
