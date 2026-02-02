@@ -200,7 +200,58 @@ const HxDRegistration = () => {
 
         return newErrors;
     };
+// 🔥 UPDATED: HANDLE PAYMENT CLICK (With Full Validation)
+    const handlePaymentClick = async (e) => {
+        e.preventDefault(); 
+        setSubmitError(null); // Clear any old errors
 
+        // 1. RUN FULL VALIDATION
+        // We strictly check everything (CNIC regex, Phone formats, Module selection)
+        // before letting them pay.
+        const validationErrors = getValidationErrors();
+        
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Create a readable list of missing fields for the error toast
+            const missingList = Object.values(validationErrors).join(", ");
+            setSubmitError(`Please fix these errors before paying: ${missingList}`);
+            return; // 🛑 STOP. Do not open the payment link.
+        }
+
+        // 2. IF VALID, PROCEED
+        setPaymentClicked(true); 
+
+        // 3. Prepare "Draft" Payload
+        const payload = { 
+            ...formData, 
+            competition: formData.competitions.join(', '),
+            totalPaid: totalCost,
+            participantCount: participantCount,
+            status: 'PENDING_PAYMENT', // Status: DRAFT
+            image: null 
+        };
+
+        // 4. Fire & Forget Request 
+        // We save the valid data now, so if they pay but don't return, we have their info.
+        try {
+            fetch("/api/submit", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+        } catch (err) {
+            console.error("Draft save failed", err);
+        }
+
+        // 5. Open Payment Link
+        // 5. Open Payment Link & Remind User
+        window.open(PAYMENT_LINKS[participantCount], '_blank');
+        
+        // ✨ NEW ADDITION HERE:
+        alert("Payment link opened in a new tab! \n\nPlease complete your transaction, then COME BACK here to upload your screenshot and finish registration.");
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitError(null);
@@ -517,16 +568,15 @@ const HxDRegistration = () => {
                                 <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
                             </div>
                             
-                            <a 
-                                href={PAYMENT_LINKS[participantCount]} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-lg text-center shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2"
-                                onClick={() => setPaymentClicked(true)}
+                           {/* PASTE THIS NEW BUTTON BLOCK */}
+                            <button 
+                                type="button" // Important! type="button" prevents it from submitting the form
+                                onClick={handlePaymentClick}
+                                className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-lg text-center shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
                             >
-                                <span>Click the link to pay</span>
+                                <span>Click here to Pay</span>
                                 <span className="text-lg">↗</span>
-                            </a>
+                            </button>
                         </div>
 
                         {/* Policies */}
