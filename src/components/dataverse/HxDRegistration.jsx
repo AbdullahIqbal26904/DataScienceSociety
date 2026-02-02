@@ -264,31 +264,41 @@ const HxDRegistration = () => {
     if (submitted) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white p-4">
-                <motion.div 
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="text-center p-8 bg-gray-900 rounded-2xl border border-gray-800 shadow-2xl max-w-md w-full"
-                >
-                    <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 p-1 border border-gray-700">
-                        <img src={dssLogo} alt="Logo" className="w-full h-full object-cover rounded-full" />
-                    </div>
-                    <h2 className="text-3xl font-bold text-green-400 mb-2">Registration Complete!</h2>
-                    <p className="text-gray-300 mb-6">We have received your details.</p>
-                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 text-left">
-                        <div className="flex gap-3">
-                            <span className="text-xl">📧</span>
-                            <div>
-                                <p className="text-yellow-200 font-semibold text-sm">Check your Email</p>
-                                <p className="text-yellow-200/70 text-xs mt-1">Look for an email from <strong>dss.iba</strong>. Check Junk/Spam.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col md:flex-row justify-center gap-4 mt-8 w-full">
-                        <button onClick={() => window.location.reload()} className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-medium w-full md:w-auto">Register Another Team</button>
-                        <Link to="/" className="px-6 py-3 bg-transparent border border-gray-700 hover:bg-gray-800 text-gray-300 rounded-xl text-sm font-medium w-full md:w-auto text-center">Return Home</Link>
-                    </div>
-                </motion.div>
+    <motion.div 
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="text-center p-8 bg-gray-900 rounded-2xl border border-gray-800 shadow-2xl max-w-md w-full"
+    >
+        <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 p-1 border border-gray-700">
+            <img src={dssLogo} alt="Logo" className="w-full h-full object-cover rounded-full" />
+        </div>
+        
+        <h2 className="text-3xl font-bold text-green-400 mb-2">Registration Submitted!</h2>
+        <p className="text-gray-300 mb-6">We have received your details.</p>
+        
+        {/* Updated Verification Message */}
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-left">
+            <div className="flex gap-3">
+                <span className="text-xl">⏳</span>
+                <div>
+                    <p className="text-blue-200 font-semibold text-sm">Verification in Progress</p>
+                    <p className="text-blue-200/70 text-xs mt-1 leading-relaxed">
+                        We will verify your payment proof shortly. Once approved, you will receive a confirmation email from <strong>dss.iba</strong>.
+                    </p>
+                </div>
             </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-center gap-4 mt-8 w-full">
+            <button onClick={() => window.location.reload()} className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-medium w-full md:w-auto">
+                Register Another Team
+            </button>
+            <Link to="/" className="px-6 py-3 bg-transparent border border-gray-700 hover:bg-gray-800 text-gray-300 rounded-xl text-sm font-medium w-full md:w-auto text-center">
+                Return Home
+            </Link>
+        </div>
+    </motion.div>
+</div>
         );
     }
 
@@ -356,11 +366,30 @@ const HxDRegistration = () => {
                         
                         {/* --- ADDED: SCHEDULING NOTE --- */}
                         <div className="mt-3 mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-start gap-3">
-                            <span className="text-blue-400 text-sm">📅</span>
-                            <p className="text-xs text-blue-200/80 leading-relaxed">
-                                <strong>Important:</strong> All modules will be conducted <strong>simultaneously</strong>. Please ensure you do not select multiple modules if you are the only participant.
-                            </p>
-                        </div>
+  {/* Icon: Added mt-0.5 for better alignment with the top line of text */}
+  <span className="text-blue-400 text-sm mt-0.5">📅</span>
+
+  {/* Text Container: This wrapper ensures the text stacks vertically */}
+  <div className="flex-1 space-y-2">
+    <p className="text-xs text-blue-200/80 leading-relaxed">
+      <strong>Important:</strong> All modules will be conducted{" "}
+      <strong>simultaneously</strong>. Please ensure you do not select
+      multiple modules if you are the only participant.
+    </p>
+
+    <p className="text-xs text-blue-200/80">
+      For any problems or queries, WhatsApp:{" "}
+      <a
+        href="https://wa.me/923350864555"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline hover:text-white transition-colors whitespace-nowrap"
+      >
+        +92 335 0864555
+      </a>
+    </p>
+  </div>
+</div>
                         
                         <div className="grid gap-3">
                             {MODULES.map((mod) => (
