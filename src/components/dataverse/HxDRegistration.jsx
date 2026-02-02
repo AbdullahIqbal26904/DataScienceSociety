@@ -249,8 +249,6 @@ const HxDRegistration = () => {
         // 5. Open Payment Link & Remind User
         window.open(PAYMENT_LINKS[participantCount], '_blank');
         
-        // ✨ NEW ADDITION HERE:
-        alert("Payment link opened in a new tab! \n\nPlease complete your transaction, then COME BACK here to upload your screenshot and finish registration.");
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -558,48 +556,90 @@ const HxDRegistration = () => {
                     </div>
 
                     {/* PAYMENT SECTION */}
-                    <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
-                        <h3 className="text-xl font-semibold text-white mb-4">Payment Verification</h3>
-                        
-                        <div className="bg-gray-950/50 p-4 rounded-lg mb-4 border border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
-                            <div className="text-left w-full">
-                                <p className="text-gray-400 text-sm">Total Amount:</p>
-                                <div className="text-2xl font-bold text-green-400">Rs {totalCost}</div>
-                                <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
-                            </div>
-                            
-                           {/* PASTE THIS NEW BUTTON BLOCK */}
-                            <button 
-                                type="button" // Important! type="button" prevents it from submitting the form
-                                onClick={handlePaymentClick}
-                                className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-lg text-center shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                            >
-                                <span>Click here to Pay</span>
-                                <span className="text-lg">↗</span>
-                            </button>
-                        </div>
+<div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+    <h3 className="text-xl font-semibold text-white mb-4">Payment Verification</h3>
+    <div className="mb-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+        <h4 className="text-blue-200 font-bold mb-2 uppercase text-xs tracking-wider">How to Register:</h4>
+        <ol className="list-decimal list-inside text-sm text-gray-300 space-y-2">
+            <li>Click the <span className="text-white font-bold">Pay Button</span> below (it opens a new tab).</li>
+            <li>Complete your transaction (JazzCash/EasyPaisa).</li>
+            <li><strong>Come back to this form</strong> and upload your screenshot below.</li>
+        </ol>
+    </div>
+    <div className="bg-gray-950/50 p-4 rounded-lg mb-4 border border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="text-left w-full">
+            <p className="text-gray-400 text-sm">Total Amount:</p>
+            <div className="text-2xl font-bold text-green-400">Rs {totalCost}</div>
+            <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
+        </div>
+        
+        {/* BUTTON: Submits Draft & Opens Link */}
+        <button 
+            type="button" 
+            onClick={handlePaymentClick}
+            className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-lg text-center shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
+        >
+            <span>Click here to Pay</span>
+            <span className="text-lg">↗</span>
+        </button>
+    </div>
 
-                        {/* Policies */}
-                        <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg mb-6">
-                            <div className="flex items-start gap-2">
-                                <span className="text-red-400 mt-0.5">⚠️</span>
-                                <ul className="text-xs text-red-200/80 list-disc list-inside space-y-1">
-                                    <li><strong>No Refund Policy:</strong> Registration fees are strictly non-refundable.</li>
-                                    <li><strong>Entry Requirement:</strong> No entry will be allowed without verified payment.</li>
-                                </ul>
-                            </div>
-                        </div>
+    {/* 🔥 BIG LOUD WARNING: Only appears AFTER they click the link */}
+    <AnimatePresence>
+        {paymentClicked && (
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mb-8 overflow-hidden"
+            >
+                <div className="p-8 bg-yellow-900/30 border-2 border-yellow-500 rounded-2xl text-center shadow-[0_0_40px_rgba(234,179,8,0.3)] relative overflow-hidden group">
+                    
+                    {/* Background Animation Effect */}
+                    <div className="absolute inset-0 bg-yellow-500/10 animate-pulse pointer-events-none"></div>
 
-                        {/* File Upload */}
-                        <div className="flex flex-col relative">
-                            <label className="text-sm text-gray-400 mb-1">
-                                Payment Screenshot with reference number (Max 4MB) <span className="text-red-400">*</span>
-                            </label>
-                            <input type="file" accept="image/*" onChange={handleFileChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" />
-                            <p className="text-xs text-gray-500 mt-2">Upload a clear screenshot of your transaction. {file && <span className="text-green-400 ml-2">✓ Selected: {file.name}</span>}</p>
-                        </div>
+                    <h2 className="text-2xl md:text-4xl font-black text-yellow-400 uppercase tracking-widest mb-4 relative z-10">
+                        ⚠️ WAIT! YOU ARE NOT DONE ⚠️
+                    </h2>
+                    
+                    <div className="space-y-2 relative z-10">
+                        <p className="text-lg text-gray-200 font-bold">
+                            We opened the payment page in a new tab.
+                        </p>
+                        <p className="text-xl md:text-3xl font-black text-white leading-tight py-4">
+                            YOU <span className="text-yellow-400 underline decoration-4 underline-offset-4">MUST COME BACK HERE</span>
+                            <br/> TO UPLOAD THE SCREENSHOT
+                        </p>
+                        <p className="text-gray-400 text-sm font-mono uppercase tracking-widest">
+                            (Otherwise your registration will be lost)
+                        </p>
                     </div>
 
+                    <div className="mt-6 text-4xl animate-bounce relative z-10">👇</div>
+                </div>
+            </motion.div>
+        )}
+    </AnimatePresence>
+
+    {/* Policies */}
+    <div className="bg-red-500/10 border border-red-500/20 p-3 rounded-lg mb-6">
+        <div className="flex items-start gap-2">
+            <span className="text-red-400 mt-0.5">⚠️</span>
+            <ul className="text-xs text-red-200/80 list-disc list-inside space-y-1">
+                <li><strong>No Refund Policy:</strong> Registration fees are strictly non-refundable.</li>
+                <li><strong>Entry Requirement:</strong> No entry will be allowed without verified payment.</li>
+            </ul>
+        </div>
+    </div>
+
+    {/* File Upload */}
+    <div className="flex flex-col relative">
+        <label className="text-sm text-gray-400 mb-1">
+            Payment Screenshot with reference number (Max 4MB) <span className="text-red-400">*</span>
+        </label>
+        <input type="file" accept="image/*" onChange={handleFileChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" />
+        <p className="text-xs text-gray-500 mt-2">Upload a clear screenshot of your transaction. {file && <span className="text-green-400 ml-2">✓ Selected: {file.name}</span>}</p>
+    </div>
+</div>
                     <button type="submit" disabled={loading} className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-lg rounded-xl shadow-lg shadow-purple-900/20 transition-all transform active:scale-95 disabled:opacity-50">
                         {loading ? 'Submitting...' : 'Complete Registration'}
                     </button>
