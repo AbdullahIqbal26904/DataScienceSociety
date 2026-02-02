@@ -556,16 +556,10 @@ const HxDRegistration = () => {
                     </div>
 
                     {/* PAYMENT SECTION */}
+{/* PAYMENT SECTION */}
 <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
     <h3 className="text-xl font-semibold text-white mb-4">Payment Verification</h3>
-    <div className="mb-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
-        <h4 className="text-blue-200 font-bold mb-2 uppercase text-xs tracking-wider">How to Register:</h4>
-        <ol className="list-decimal list-inside text-sm text-gray-300 space-y-2">
-            <li>Click the <span className="text-white font-bold">Pay Button</span> below (it opens a new tab).</li>
-            <li>Complete your transaction (JazzCash/EasyPaisa).</li>
-            <li><strong>Come back to this form</strong> and upload your screenshot below.</li>
-        </ol>
-    </div>
+
     <div className="bg-gray-950/50 p-4 rounded-lg mb-4 border border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="text-left w-full">
             <p className="text-gray-400 text-sm">Total Amount:</p>
@@ -573,7 +567,7 @@ const HxDRegistration = () => {
             <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
         </div>
         
-        {/* BUTTON: Submits Draft & Opens Link */}
+        {/* BUTTON */}
         <button 
             type="button" 
             onClick={handlePaymentClick}
@@ -584,37 +578,19 @@ const HxDRegistration = () => {
         </button>
     </div>
 
-    {/* 🔥 BIG LOUD WARNING: Only appears AFTER they click the link */}
+    {/* 🔥 COMPACT WARNING: Appears AFTER clicking */}
     <AnimatePresence>
         {paymentClicked && (
             <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="mb-8 overflow-hidden"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mb-6 overflow-hidden"
             >
-                <div className="p-8 bg-yellow-900/30 border-2 border-yellow-500 rounded-2xl text-center shadow-[0_0_40px_rgba(234,179,8,0.3)] relative overflow-hidden group">
-                    
-                    {/* Background Animation Effect */}
-                    <div className="absolute inset-0 bg-yellow-500/10 animate-pulse pointer-events-none"></div>
-
-                    <h2 className="text-2xl md:text-4xl font-black text-yellow-400 uppercase tracking-widest mb-4 relative z-10">
-                        ⚠️ WAIT! YOU ARE NOT DONE ⚠️
-                    </h2>
-                    
-                    <div className="space-y-2 relative z-10">
-                        <p className="text-lg text-gray-200 font-bold">
-                            We opened the payment page in a new tab.
-                        </p>
-                        <p className="text-xl md:text-3xl font-black text-white leading-tight py-4">
-                            YOU <span className="text-yellow-400 underline decoration-4 underline-offset-4">MUST COME BACK HERE</span>
-                            <br/> TO UPLOAD THE SCREENSHOT
-                        </p>
-                        <p className="text-gray-400 text-sm font-mono uppercase tracking-widest">
-                            (Otherwise your registration will be lost)
-                        </p>
-                    </div>
-
-                    <div className="mt-6 text-4xl animate-bounce relative z-10">👇</div>
+                <div className="flex items-center gap-3 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg">
+                    <span className="text-2xl animate-pulse">⚠️</span>
+                    <p className="text-sm text-yellow-100 font-medium">
+                        Link opened! Please complete your payment, then <strong>come back here</strong> to upload the screenshot below.
+                    </p>
                 </div>
             </motion.div>
         )}
