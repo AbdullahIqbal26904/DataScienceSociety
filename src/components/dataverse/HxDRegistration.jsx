@@ -85,7 +85,8 @@ const HxDRegistration = () => {
         leadName: '', leadPhone: '', leadEmail: '', leadCNIC: '',
         p2Name: '', p2Phone: '', p2CNIC: '',
         p3Name: '', p3Phone: '', p3CNIC: '',
-        p4Name: '', p4Phone: '', p4CNIC: '', // ✅ Added Participant 4 fields
+        p4Name: '', p4Phone: '', p4CNIC: '',
+        baCode: '' // ✅ Added Participant 4 fields
     });
 
     useEffect(() => {
@@ -482,6 +483,13 @@ const HxDRegistration = () => {
                         <div className="grid md:grid-cols-2 gap-4">
                             <InputGroup label="Team Name" name="teamName" value={formData.teamName} onChange={handleChange} onBlur={handleBlur} error={errors.teamName} required />
                             <InputGroup label="Institute Name" name="institute" value={formData.institute} onChange={handleChange} onBlur={handleBlur} error={errors.institute} required />
+                        <InputGroup 
+                                label="Brand Ambassador Code (Optional)" 
+                                name="baCode" 
+                                value={formData.baCode} 
+                                onChange={handleChange} 
+                                placeholder="e.g. 17h12h"
+                            />
                         </div>
                     </div>
 
