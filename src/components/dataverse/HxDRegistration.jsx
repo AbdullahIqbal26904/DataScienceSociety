@@ -14,12 +14,12 @@ const PAYMENT_LINKS = {
 // ✅ Added 'max' property to enforce limits
 const MODULES = [
     { id: 'game-dev', name: 'Game Dev', early: 500, normal: 1000, max: 3 },
-    { id: 'shark-tank', name: 'Shark Tank', early: 700, normal: 1500, max: 4 }, // 🦈 Only one allowing 4
+    { id: 'shark-tank', name: 'Shark Tank', early: 750, normal: 1500, max: 4 }, // 🦈 Only one allowing 4
     { id: 'csi', name: 'Crime Scene Investigation', early: 500, normal: 1000, max: 3 },
     { id: 'gen-ai', name: 'Gen AI', early: 500, normal: 1000, max: 3 },
-    { id: 'ml', name: 'Machine Learning', early: 700, normal: 1500, max: 3 },
+    { id: 'ml', name: 'Machine Learning', early: 750, normal: 1500, max: 3 },
     { id: 'ui-ux', name: 'UI/UX', early: 500, normal: 1000, max: 2 }, // ⚠️ Limit 2
-    { id: 'cp', name: 'Competitive Programming', early: 700, normal: 1500, max: 3 },
+    { id: 'cp', name: 'Competitive Programming', early: 750, normal: 1500, max: 3 },
     { id: 'data', name: 'Data Analytics', early: 500, normal: 1000, max: 2 }, // ⚠️ Limit 2
     { id: 'web-dev', name: 'Web Development', early: 500, normal: 1000, max: 3 },
 ];
