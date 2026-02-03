@@ -8,11 +8,11 @@ const COMPETITIONS = [
     { name: "Game Development", earlyBird: 500, normal: 1000, teamSize: 3, category: "dev", icon: "GD", color: "from-purple-500 to-pink-500" },
     { name: "Shark Tank", earlyBird: 700, normal: 1500, teamSize: 4, category: "business", icon: "ST", color: "from-blue-500 to-cyan-500" },
     { name: "UI/UX Design", earlyBird: 500, normal: 1000, teamSize: 2, category: "design", icon: "UX", color: "from-pink-500 to-rose-500" },
-    { name: "CSI (Crime Scene Investigation)", earlyBird: 500, normal: 1000, teamSize: 3, category: "misc", icon: "CSI", color: "from-amber-500 to-orange-500" },
+    { name: "CSI (Crime Scene Investigation)", earlyBird: 700, normal: 1000, teamSize: 3, category: "misc", icon: "CSI", color: "from-amber-500 to-orange-500" },
     { name: "Competitive Programming", earlyBird: 700, normal: 1500, teamSize: 3, category: "dev", icon: "CP", color: "from-yellow-500 to-amber-500" },
     { name: "Data Analytics", earlyBird: 500, normal: 1000, teamSize: 2, category: "data", icon: "DA", color: "from-teal-500 to-cyan-500" },
     { name: "Generative AI", earlyBird: 500, normal: 1000, teamSize: 3, category: "ai", icon: "GAI", color: "from-violet-500 to-purple-500" },
-    { name: "ML Competition", earlyBird: 700, normal: 1500, teamSize: 3, category: "ai", icon: "ML", color: "from-indigo-500 to-blue-500" },
+    { name: "ML Competition", earlyBird: 750, normal: 1500, teamSize: 3, category: "ai", icon: "ML", color: "from-indigo-500 to-blue-500" },
     { name: "Web Development", earlyBird: 500, normal: 1000, teamSize: 3, category: "dev", icon: "WD", color: "from-sky-500 to-blue-500" },
 ];
 
@@ -414,7 +414,7 @@ const DataverseSection = () => {
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                                                 </svg>
                                             </div>
-                                            <span className="text-sm">10 Competition Tracks</span>
+                                            <span className="text-sm">9 Competition Tracks</span>
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">

@@ -15,7 +15,7 @@ const PAYMENT_LINKS = {
 const MODULES = [
     { id: 'game-dev', name: 'Game Dev', early: 500, normal: 1000, max: 3 },
     { id: 'shark-tank', name: 'Shark Tank', early: 700, normal: 1500, max: 4 }, // 🦈 Only one allowing 4
-    { id: 'csi', name: 'Crime Scene Investigation', early: 700, normal: 1000, max: 3 },
+    { id: 'csi', name: 'Crime Scene Investigation', early: 700, normal: 1500, max: 3 },
     { id: 'gen-ai', name: 'Gen AI', early: 500, normal: 1000, max: 3 },
     { id: 'ml', name: 'Machine Learning', early: 700, normal: 1500, max: 3 },
     { id: 'ui-ux', name: 'UI/UX', early: 500, normal: 1000, max: 2 }, // ⚠️ Limit 2
