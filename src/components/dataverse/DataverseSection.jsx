@@ -8,7 +8,7 @@ const COMPETITIONS = [
     { name: "Game Development", earlyBird: 500, normal: 1000, teamSize: 3, category: "dev", icon: "GD", color: "from-purple-500 to-pink-500" },
     { name: "Shark Tank", earlyBird: 700, normal: 1500, teamSize: 4, category: "business", icon: "ST", color: "from-blue-500 to-cyan-500" },
     { name: "UI/UX Design", earlyBird: 500, normal: 1000, teamSize: 2, category: "design", icon: "UX", color: "from-pink-500 to-rose-500" },
-    { name: "CSI (Crime Scene Investigation)", earlyBird: 700, normal: 1000, teamSize: 3, category: "misc", icon: "CSI", color: "from-amber-500 to-orange-500" },
+    { name: "CSI (Crime Scene Investigation)", earlyBird: 700, normal: 1500, teamSize: 3, category: "misc", icon: "CSI", color: "from-amber-500 to-orange-500" },
     { name: "Competitive Programming", earlyBird: 700, normal: 1500, teamSize: 3, category: "dev", icon: "CP", color: "from-yellow-500 to-amber-500" },
     { name: "Data Analytics", earlyBird: 500, normal: 1000, teamSize: 2, category: "data", icon: "DA", color: "from-teal-500 to-cyan-500" },
     { name: "Generative AI", earlyBird: 500, normal: 1000, teamSize: 3, category: "ai", icon: "GAI", color: "from-violet-500 to-purple-500" },
