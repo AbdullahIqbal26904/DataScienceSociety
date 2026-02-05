@@ -16,6 +16,10 @@ import AboutUs from './components/about/AboutUs';
 import Gallery from './components/gallery/Gallery';
 import { setshowloader, setInitialData } from './redux/features/portfolioSlice';
 import EditRegistration from './components/dataverse/EditRegistration';
+import FAQ from './components/dataverse/faq';
+import ModuleDetails from './components/dataverse/ModuleDetails';
+
+
 export default function App() {
   const { society, showloader } = useSelector((state) => state.allCart);
   const [hasError, setHasError] = useState(false);
@@ -163,7 +167,35 @@ export default function App() {
             </main>
 
           } />
-          <Route path="/edit" element={<EditRegistration />} />
+           <Route path="/edit" element={
+            <main className="relative w-full min-h-screen">
+              <BackgroundManager />
+              <div className="relative z-10">
+                <EditRegistration />
+              </div>
+            </main>
+
+          } />
+           <Route path="/faq" element={
+            <main className="relative w-full min-h-screen">
+              <BackgroundManager />
+              <div className="relative z-10">
+                <FAQ />
+              </div>
+            </main>
+
+          } />
+          <Route path="/modules" element={
+            <main className="relative w-full min-h-screen">
+              <BackgroundManager />
+              <div className="relative z-10">
+                <ModuleDetails />
+              </div>
+            </main>
+
+          } />
+          {/* <Route path="/edit" element={<EditRegistration />} />
+          <Route path="/faq" element={<FAQ />} /> */}
           <Route path="/*" element={
             <main className="relative w-full min-h-screen">
               <BackgroundManager />

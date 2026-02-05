@@ -11,7 +11,7 @@ export default function Navbar() {
     useEffect(() => {
         // Use Intersection Observer to detect which section is in view
         // This works correctly with snap scroll containers
-        const sections = ['hero', 'about', 'events', 'dataverse', 'gallery', 'contact'];
+        const sections = ['hero', 'about', 'events', 'dataverse', 'gallery', 'contact',"faq","Module Details"];
         
         const observerOptions = {
             root: null, // viewport
@@ -44,7 +44,9 @@ export default function Navbar() {
         { name: 'About', link: '#about', icon: '' },
         { name: 'Events', link: '#events', icon: '' },
         { name: 'Hackfest x Datathon 2.0', link: '#dataverse', icon: '' },
+        { name: 'Module Details', link: '/modules', icon: '' }, // 👈 NEW LINK
         { name: 'Gallery', link: '#gallery', icon: '' },
+        { name: 'FAQs', link: '/faq', icon: '' }, // 👈 NEW LINK
     ];
 
     const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);

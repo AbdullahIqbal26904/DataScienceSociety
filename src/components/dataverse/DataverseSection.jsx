@@ -5,15 +5,24 @@ import { Link } from 'react-router-dom';
 // --- OPTIMIZATION 1: Move static data OUTSIDE the component ---
 // This prevents Javascript from recreating these arrays on every single render.
 const COMPETITIONS = [
-    { name: "Game Development", earlyBird: 500, normal: 1000, teamSize: 3, category: "dev", icon: "GD", color: "from-purple-500 to-pink-500" },
-    { name: "Shark Tank", earlyBird: 700, normal: 1500, teamSize: 4, category: "business", icon: "ST", color: "from-blue-500 to-cyan-500" },
-    { name: "UI/UX Design", earlyBird: 500, normal: 1000, teamSize: 2, category: "design", icon: "UX", color: "from-pink-500 to-rose-500" },
-    { name: "CSI (Crime Scene Investigation)", earlyBird: 700, normal: 1500, teamSize: 3, category: "misc", icon: "CSI", color: "from-amber-500 to-orange-500" },
-    { name: "Competitive Programming", earlyBird: 700, normal: 1500, teamSize: 3, category: "dev", icon: "CP", color: "from-yellow-500 to-amber-500" },
-    { name: "Data Analytics", earlyBird: 500, normal: 1000, teamSize: 2, category: "data", icon: "DA", color: "from-teal-500 to-cyan-500" },
-    { name: "Generative AI", earlyBird: 500, normal: 1000, teamSize: 3, category: "ai", icon: "GAI", color: "from-violet-500 to-purple-500" },
-    { name: "ML Competition", earlyBird: 750, normal: 1500, teamSize: 3, category: "ai", icon: "ML", color: "from-indigo-500 to-blue-500" },
-    { name: "Web Development", earlyBird: 500, normal: 1000, teamSize: 3, category: "dev", icon: "WD", color: "from-sky-500 to-blue-500" },
+    { id: 'game-dev', // ✅ ADDED ID
+        name: "Game Development", earlyBird: 500, normal: 1000, teamSize: 3, category: "dev", icon: "GD", color: "from-purple-500 to-pink-500" },
+    { id: 'shark-tank', // ✅ ADDED ID
+        name: "Shark Tank", earlyBird: 700, normal: 1500, teamSize: 4, category: "business", icon: "ST", color: "from-blue-500 to-cyan-500" },
+    { id: 'ui-ux', // ✅ ADDED ID
+        name: "UI/UX Design", earlyBird: 500, normal: 1000, teamSize: 2, category: "design", icon: "UX", color: "from-pink-500 to-rose-500" },
+    { id: 'csi', // ✅ ADDED ID
+        name: "CSI (Crime Scene Investigation)", earlyBird: 700, normal: 1500, teamSize: 3, category: "misc", icon: "CSI", color: "from-amber-500 to-orange-500" },
+    { id: 'cp', // ✅ ADDED ID
+        name: "Competitive Programming", earlyBird: 700, normal: 1500, teamSize: 3, category: "dev", icon: "CP", color: "from-yellow-500 to-amber-500" },
+    {id: 'data', // ✅ ADDED ID
+         name: "Data Analytics", earlyBird: 500, normal: 1000, teamSize: 2, category: "data", icon: "DA", color: "from-teal-500 to-cyan-500" },
+    { id: 'gen-ai', // ✅ ADDED ID
+        name: "Generative AI", earlyBird: 500, normal: 1000, teamSize: 3, category: "ai", icon: "GAI", color: "from-violet-500 to-purple-500" },
+    { id: 'ml', // ✅ ADDED ID
+        name: "ML Competition", earlyBird: 750, normal: 1500, teamSize: 3, category: "ai", icon: "ML", color: "from-indigo-500 to-blue-500" },
+    { id: 'web-dev', // ✅ ADDED ID
+        name: "Web Development", earlyBird: 500, normal: 1000, teamSize: 3, category: "dev", icon: "WD", color: "from-sky-500 to-blue-500" },
 ];
 
 const CATEGORIES = [
@@ -346,6 +355,16 @@ const DataverseSection = () => {
                                                 Save Rs. {comp.normal - comp.earlyBird}
                                             </span>
                                         </div>
+                                        
+                                    <div className="mt-auto pt-6 w-full text-center">
+                                        <Link 
+                                            to="/modules"
+                                            state={{ openModuleId: comp.id }} 
+                                            className="w-full inline-block px-10 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-bold transition-all border border-gray-700 hover:border-gray-500 shadow-lg hover:shadow-gray-900/50"
+                                        >
+                                            Details
+                                        </Link>
+                                    </div>
                                     </div>
                                 </div>
                             </motion.div>

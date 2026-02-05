@@ -8,30 +8,20 @@ const PAYMENT_LINKS = {
     1: import.meta.env.VITE_PAYMENT_LINK_1,
     2: import.meta.env.VITE_PAYMENT_LINK_2,
     3: import.meta.env.VITE_PAYMENT_LINK_3,
-    4: import.meta.env.VITE_PAYMENT_LINK_4 // ✅ Added Link for 4 People
+    4: import.meta.env.VITE_PAYMENT_LINK_4 
 };
 
-// ✅ Added 'max' property to enforce limits
 const MODULES = [
     { id: 'game-dev', name: 'Game Dev', early: 500, normal: 1000, max: 3 },
-    { id: 'shark-tank', name: 'Shark Tank', early: 700, normal: 1500, max: 4 }, // 🦈 Only one allowing 4
+    { id: 'shark-tank', name: 'Shark Tank', early: 700, normal: 1500, max: 4 }, 
     { id: 'csi', name: 'Crime Scene Investigation', early: 700, normal: 1500, max: 3 },
     { id: 'gen-ai', name: 'Gen AI', early: 500, normal: 1000, max: 3 },
     { id: 'ml', name: 'Machine Learning', early: 700, normal: 1500, max: 3 },
-    { id: 'ui-ux', name: 'UI/UX', early: 500, normal: 1000, max: 2 }, // ⚠️ Limit 2
+    { id: 'ui-ux', name: 'UI/UX', early: 500, normal: 1000, max: 2 }, 
     { id: 'cp', name: 'Competitive Programming', early: 700, normal: 1500, max: 3 },
-    { id: 'data', name: 'Data Analytics', early: 500, normal: 1000, max: 2 }, // ⚠️ Limit 2
+    { id: 'data', name: 'Data Analytics', early: 500, normal: 1000, max: 2 }, 
     { id: 'web-dev', name: 'Web Development', early: 500, normal: 1000, max: 3 },
 ];
-
-const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-};
 
 const HxDRegistration = () => {
     // --- STATE ---
@@ -44,35 +34,14 @@ const HxDRegistration = () => {
     const [paymentClicked, setPaymentClicked] = useState(false);
     const [submitError, setSubmitError] = useState(null);
 
-    // --- FILE STATE ---
-    const [file, setFile] = useState(null); 
+    // ✅ REMOVED: File State (file, setFile)
 
     // --- 🔒 SANITIZER FUNCTION ---
     const sanitizeInput = (value) => {
         return value.replace(/[<>;\[\]\/\\\\]/g, "");
     };
     
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
-        
-        if (!selectedFile) return;
-
-        if (!allowedTypes.includes(selectedFile.type)) {
-            setSubmitError("Invalid file type! Please upload a JPG, PNG, or PDF.");
-            setFile(null);
-            e.target.value = null;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-        if (selectedFile.size > 4 * 1024 * 1024) {
-            setSubmitError("File is too big! Please use an image under 4MB.");
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-        setFile(selectedFile);
-        setSubmitError(null); 
-    };
+    // ✅ REMOVED: handleFileChange function
 
     useEffect(() => {
         const deadline = new Date(2026, 1, 6, 23, 59, 59);
@@ -86,7 +55,8 @@ const HxDRegistration = () => {
         p2Name: '', p2Phone: '', p2CNIC: '',
         p3Name: '', p3Phone: '', p3CNIC: '',
         p4Name: '', p4Phone: '', p4CNIC: '',
-        baCode: '' // ✅ Added Participant 4 fields
+        baCode: '',
+        orderNumber: '' // ✅ ADDED: Order Number Field
     });
 
     useEffect(() => {
@@ -119,35 +89,13 @@ const HxDRegistration = () => {
         });
         setTotalCost(total);
     }, [formData.competitions, participantCount, isEarlyBird]);
-// 🔥 NEW: Auto-Correct Participant Count if Module Selection Changes
-    // useEffect(() => {
-    //     const allowedMax = getMaxTeamSize();
-        
-    //     // If we have more participants than allowed, cut them off
-    //     if (participantCount > allowedMax) {
-    //         setParticipantCount(allowedMax);
-            
-    //         // Optional: Clear the data for the removed participants so it doesn't send hidden data
-    //         setFormData(prev => ({
-    //             ...prev,
-    //             ...(allowedMax < 4 ? { p4Name: '', p4Phone: '', p4CNIC: '' } : {}),
-    //             ...(allowedMax < 3 ? { p3Name: '', p3Phone: '', p3CNIC: '' } : {}),
-    //             ...(allowedMax < 2 ? { p2Name: '', p2Phone: '', p2CNIC: '' } : {})
-    //         }));
-    //     }
-    // }, [formData.competitions]); // Runs whenever modules change
-    // 🔥 HELPER: Calculate Allowed Team Size based on selection
+
     const getMaxTeamSize = () => {
-        if (formData.competitions.length === 0) return 3; // Default
-        
-        // Map selected module names to their 'max' values
+        if (formData.competitions.length === 0) return 3; 
         const limits = formData.competitions.map(compName => {
             const mod = MODULES.find(m => m.name === compName);
             return mod ? mod.max : 3;
         });
-
-        // The limit is the LOWEST of all selected (intersection)
-        // e.g., Shark Tank (4) + UI/UX (2) = Max 2 allowed for that team
         return Math.min(...limits);
     };
 
@@ -160,6 +108,7 @@ const HxDRegistration = () => {
 
         if (name.includes('Name') && !value.trim()) errorMsg = "Required";
         else if (name.includes('institute') && !value.trim()) errorMsg = "Required";
+        else if (name.includes('orderNumber') && !value.trim()) errorMsg = "Order ID Required"; // ✅ Validate Order Number
         else if (name.includes('Email') && !emailRegex.test(value)) errorMsg = "Invalid Email";
         else if (name.includes('Phone') && !phoneRegex.test(cleanVal)) errorMsg = "Format: 03XXXXXXXXX";
         else if (name.includes('CNIC') && !cnicRegex.test(cleanVal)) errorMsg = "Must be 13 digits";
@@ -197,12 +146,11 @@ const HxDRegistration = () => {
         const phoneRegex = /^03\d{9}$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        // Team & Institute
         if (!formData.teamName.trim()) newErrors.teamName = "Team Name";
         if (!formData.institute.trim()) newErrors.institute = "Institute";
         if (formData.competitions.length === 0) newErrors.competitions = "Modules";
+        if (!formData.orderNumber.trim()) newErrors.orderNumber = "Order Number is required"; // ✅ Check Order Number
 
-        // 🔥 CHECK MAX LIMIT
         const allowedMax = getMaxTeamSize();
         if (participantCount > allowedMax) {
             newErrors.competitions = `You have ${participantCount} members, but one of your modules only allows ${allowedMax}.`;
@@ -214,21 +162,17 @@ const HxDRegistration = () => {
         if (!phoneRegex.test(formData.leadPhone.replace(/-/g, ''))) newErrors.leadPhone = "Lead Phone";
         if (!cnicRegex.test(formData.leadCNIC.replace(/-/g, ''))) newErrors.leadCNIC = "Lead CNIC";
 
-        // Participant 2
+        // Participants Validation
         if (participantCount >= 2) {
             if (!formData.p2Name.trim()) newErrors.p2Name = "P2 Name";
             if (!phoneRegex.test(formData.p2Phone.replace(/-/g, ''))) newErrors.p2Phone = "P2 Phone";
             if (!cnicRegex.test(formData.p2CNIC.replace(/-/g, ''))) newErrors.p2CNIC = "P2 CNIC";
         }
-
-        // Participant 3
         if (participantCount >= 3) {
             if (!formData.p3Name.trim()) newErrors.p3Name = "P3 Name";
             if (!phoneRegex.test(formData.p3Phone.replace(/-/g, ''))) newErrors.p3Phone = "P3 Phone";
             if (!cnicRegex.test(formData.p3CNIC.replace(/-/g, ''))) newErrors.p3CNIC = "P3 CNIC";
         }
-
-        // ✅ Participant 4
         if (participantCount >= 4) {
             if (!formData.p4Name.trim()) newErrors.p4Name = "P4 Name";
             if (!phoneRegex.test(formData.p4Phone.replace(/-/g, ''))) newErrors.p4Phone = "P4 Phone";
@@ -242,25 +186,19 @@ const HxDRegistration = () => {
         e.preventDefault(); 
         setSubmitError(null); 
 
-        const validationErrors = getValidationErrors();
-        
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            const missingList = Object.values(validationErrors).join(", ");
-            setSubmitError(`Please fix errors: ${missingList}`);
-            return; 
-        }
-
+        // Allow partial validation for draft saving, but mostly we just save state
         setPaymentClicked(true); 
 
+        // Draft Payload
         const payload = { 
             ...formData, 
             competition: formData.competitions.join(', '),
             totalPaid: totalCost,
             participantCount: participantCount,
-            status: 'PENDING_PAYMENT', 
-            image: null 
+            status: 'PENDING_PAYMENT',
+            orderNumber: "PAYMENT_INITIATED" // Placeholder if not filled yet
+
+            // ✅ No Image sent here
         };
 
         try {
@@ -293,25 +231,23 @@ const HxDRegistration = () => {
             setSubmitError("Please click the Payment Link to initiate your transaction.");
             return;
         }
-        if (!file) {
-            setSubmitError("Please upload a payment screenshot.");
+        // ✅ Check if Order Number is missing (Redundant check but safe)
+        if (!formData.orderNumber) {
+            setSubmitError("Please enter the Order ID / Transaction Reference.");
             return;
         }
 
         setLoading(true);
 
         try {
-            const base64Image = await convertToBase64(file);
-
+            // ✅ UPDATED PAYLOAD: Removed Image, Added orderNumber
             const payload = { 
                 ...formData, 
                 competition: formData.competitions.join(', '),
                 totalPaid: totalCost,
-                participantCount: participantCount, // ✅ Sends 1, 2, 3, or 4
+                participantCount: participantCount,
                 status: 'VERIFICATION_NEEDED', 
-                image: base64Image,
-                imageName: file.name,
-                mimeType: file.type
+                orderNumber: formData.orderNumber // ✅ Send Order Number
             };
 
             const response = await fetch("/api/submit", {
@@ -321,6 +257,13 @@ const HxDRegistration = () => {
             });
 
             const result = await response.json();
+
+            // ✅ Handle "Retry" for Server Busy
+            if (result.result === "retry") {
+                setSubmitError("Server is busy! Retrying in 3 seconds...");
+                setTimeout(() => handleSubmit(e), 3000); // Auto-retry logic
+                return;
+            }
 
             if (result.result === "error") {
                 setSubmitError(result.message);
@@ -360,7 +303,7 @@ const HxDRegistration = () => {
                             <div>
                                 <p className="text-blue-200 font-semibold text-sm">Verification in Progress</p>
                                 <p className="text-blue-200/70 text-xs mt-1 leading-relaxed">
-                                    We will verify your payment proof shortly. Once approved, you will receive a confirmation email from <strong>dss.iba</strong>.
+                                    We will verify your Order ID. Once approved, you will receive a confirmation email.
                                 </p>
                             </div>
                         </div>
@@ -408,11 +351,21 @@ const HxDRegistration = () => {
 
             <div className="container mx-auto px-4 py-8 max-w-3xl pt-20">
                 
-                <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors group">
-                    <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                    <span>Back to Home</span>
-                </Link>
-                
+                <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
+                        <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                        <span>Back to Home</span>
+                    </Link>
+
+                    <div className="flex gap-6 text-sm font-medium">
+                        <Link to="/modules" className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-1">
+                             Module Details
+                        </Link>
+                        <Link to="/faq" className="text-gray-400 hover:text-blue-400 transition-colors flex items-center gap-1">
+                           FAQs
+                        </Link>
+                    </div>
+                </div>
                 <div className="text-center mb-10">
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.9 }}
@@ -443,6 +396,9 @@ const HxDRegistration = () => {
                                 <p className="text-xs text-blue-200/80 leading-relaxed">
                                     <strong>Important:</strong> All modules will be conducted <strong>simultaneously</strong>.
                                 </p>
+                                <p className="text-xs text-blue-200/80 leading-relaxed">
+                                    <strong>Important:</strong> All modules Prices are per <strong>person</strong>.
+                                </p>
                             </div>
                         </div>
                         
@@ -454,7 +410,6 @@ const HxDRegistration = () => {
                                         <div className="flex justify-between items-center">
                                             <span className={`font-medium ${formData.competitions.includes(mod.name) ? 'text-white' : 'text-gray-300'}`}>
                                                 {mod.name} 
-                                                {/* Show Max Count Badge */}
                                                 <span className="ml-2 text-[10px] uppercase bg-gray-700 text-gray-400 px-1.5 py-0.5 rounded border border-gray-600">Max {mod.max}</span>
                                             </span>
                                             
@@ -513,7 +468,7 @@ const HxDRegistration = () => {
                             </div>
                         </div>
 
-                        {/* P2 */}
+                        {/* P2, P3, P4 Sections (Standard) */}
                         <AnimatePresence>
                             {participantCount >= 2 && (
                                 <motion.div 
@@ -535,7 +490,6 @@ const HxDRegistration = () => {
                             )}
                         </AnimatePresence>
 
-                        {/* P3 */}
                         <AnimatePresence>
                             {participantCount >= 3 && (
                                 <motion.div 
@@ -557,8 +511,7 @@ const HxDRegistration = () => {
                             )}
                         </AnimatePresence>
 
-                         {/* ✅ P4: Only for Shark Tank */}
-                         <AnimatePresence>
+                        <AnimatePresence>
                             {participantCount >= 4 && (
                                 <motion.div 
                                     initial={{ opacity: 0, height: 0 }} 
@@ -593,7 +546,6 @@ const HxDRegistration = () => {
                             </motion.button>
                         )}
                         
-                        {/* WARNING IF LIMIT REACHED */}
                         {participantCount === getMaxTeamSize() && (
                             <p className="text-center text-xs text-gray-500 mt-2">
                                 Max Limit Reached for selected modules.
@@ -612,7 +564,6 @@ const HxDRegistration = () => {
                                 <p className="text-xs text-gray-500 mt-1">{isEarlyBird ? 'Early Bird' : 'Standard'} Price x {participantCount} Participant{participantCount > 1 ? 's' : ''}</p>
                             </div>
                             
-                            {/* BUTTON */}
                             <button 
                                 type="button" 
                                 onClick={handlePaymentClick}
@@ -623,11 +574,10 @@ const HxDRegistration = () => {
                             </button>
                         </div>
 
-                        {/* 🔥 ALWAYS VISIBLE WARNING */}
                         <div className="mb-6 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg flex items-center gap-3">
                             <span className="text-2xl">⚠️</span>
                             <p className="text-sm text-yellow-100 font-medium leading-tight">
-                                The payment link opens in a new tab. Please complete your transaction there, then <strong>come back here</strong> to upload the screenshot below.
+                                The payment link opens in a new tab. After paying, copy the <strong>Transaction/Order ID</strong> and paste it below.
                             </p>
                         </div>
 
@@ -642,13 +592,18 @@ const HxDRegistration = () => {
                             </div>
                         </div>
 
-                        {/* File Upload */}
+                        {/* ✅ CHANGED: Order Number Input instead of File Upload */}
                         <div className="flex flex-col relative">
-                            <label className="text-sm text-gray-400 mb-1">
-                                Payment Screenshot with reference number (Max 4MB) <span className="text-red-400">*</span>
-                            </label>
-                            <input type="file" accept="image/*" onChange={handleFileChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" />
-                            <p className="text-xs text-gray-500 mt-2">Upload a clear screenshot of your transaction. {file && <span className="text-green-400 ml-2">✓ Selected: {file.name}</span>}</p>
+                            <InputGroup 
+                                label="Order ID / Transaction Reference" 
+                                name="orderNumber" 
+                                value={formData.orderNumber} 
+                                onChange={handleChange} 
+                                onBlur={handleBlur} 
+                                error={errors.orderNumber} 
+                                placeholder="e.g. 123456789 or TXN-12345"
+                                required
+                            />
                         </div>
                     </div>
 
@@ -661,7 +616,7 @@ const HxDRegistration = () => {
     );
 };
 
-// Input Component
+// Input Component (Unchanged)
 const InputGroup = ({ label, name, value, onChange, onBlur, error, type = "text", required = false, placeholder = "" }) => (
     <div className="flex flex-col relative">
         <label className="text-sm text-gray-400 mb-1">{label} {required && <span className="text-red-400">*</span>}</label>
