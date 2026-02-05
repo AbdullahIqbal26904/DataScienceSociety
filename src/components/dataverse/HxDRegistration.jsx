@@ -185,7 +185,19 @@ const HxDRegistration = () => {
     const handlePaymentClick = async (e) => {
         e.preventDefault(); 
         setSubmitError(null); 
+const validationErrors = getValidationErrors();
+// Remove 'orderNumber' from the check, because they haven't paid yet!
+        if (validationErrors.orderNumber) {
+            delete validationErrors.orderNumber;
+        }
 
+        // If there are any other errors (names, phones, selections), STOP.
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            setSubmitError("Please fill in all Team & Participant details before making a payment.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return; // 🛑 Stops the function here. Link won't open.
+        }
         // Allow partial validation for draft saving, but mostly we just save state
         setPaymentClicked(true); 
 
