@@ -44,7 +44,7 @@ const HxDRegistration = () => {
     // ✅ REMOVED: handleFileChange function
 
     useEffect(() => {
-        const deadline = new Date(2026, 1, 6, 23, 59, 59);
+        const deadline = new Date(2026, 1, 9, 23, 59, 59);
         const today = new Date();
         setIsEarlyBird(today < deadline);
     }, []);
