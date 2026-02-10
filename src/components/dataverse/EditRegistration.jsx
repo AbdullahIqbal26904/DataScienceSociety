@@ -110,6 +110,7 @@ const EditRegistration = () => {
             if (!data.p3Phone || !phoneRegex.test(data.p3Phone.replace(/-/g, ''))) errors.p3Phone = "Invalid Phone";
             if (!data.p3CNIC || !cnicRegex.test(data.p3CNIC.replace(/-/g, ''))) errors.p3CNIC = "Invalid CNIC";
         }
+        if (!data.orderNumber?.trim()) errors.orderNumber = "Order ID is required";
 
         return errors;
     };
@@ -154,7 +155,7 @@ const EditRegistration = () => {
                 institute: data.institute,
                 leadPhone: data.leadPhone, 
                 leadEmail: data.leadEmail, 
-
+                orderNumber: data.orderNumber,
                 p2Name: data.p2Name, p2Phone: data.p2Phone, p2CNIC: data.p2CNIC,
                 p3Name: data.p3Name, p3Phone: data.p3Phone, p3CNIC: data.p3CNIC,
             };
@@ -174,11 +175,11 @@ const EditRegistration = () => {
         }
     };
 
-    if (loading) return <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">Loading Data...</div>;
-    if (error) return <div className="min-h-screen bg-gray-950 text-red-400 flex items-center justify-center font-bold text-xl">{error}</div>;
+    if (loading) return <div className="min-h-screen  text-white flex items-center justify-center">Loading Data...</div>;
+    if (error) return <div className="min-h-screen  text-red-400 flex items-center justify-center font-bold text-xl">{error}</div>;
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 font-sans text-gray-200">
+        <div className="min-h-screen relative overflow-hidden  from-gray-950 via-gray-900 to-gray-950 font-sans text-gray-200">
             
             {/* 🔥 STICKY ERROR TOAST */}
             <AnimatePresence>
@@ -249,7 +250,22 @@ const EditRegistration = () => {
                         <h3 className="text-xl font-semibold text-purple-400 mb-4 border-b border-gray-700 pb-2">Team Details</h3>
                         <div className="grid md:grid-cols-2 gap-4">
                             <InputGroup label="Team Name" name="teamName" value={data.teamName} onChange={handleChange} error={fieldErrors.teamName} />
-                            <InputGroup label="Institute Name" name="institute" value={data.institute} onChange={handleChange} error={fieldErrors.institute} />
+                            <div className="opacity-60 cursor-not-allowed">
+                            <InputGroup label="Institute Name (Locked)" name="institute" value={data.institute} onChange={handleChange} error={fieldErrors.institute} disabled={true} />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+                        <h3 className="text-xl font-semibold text-green-400 mb-4 border-b border-gray-700 pb-2">Payment Details</h3>
+                        <div className="grid md:grid-cols-1 gap-4">
+                            <InputGroup 
+                                label="Order ID / Transaction Reference" 
+                                name="orderNumber" 
+                                value={data.orderNumber} 
+                                onChange={handleChange} 
+                                error={fieldErrors.orderNumber}
+                                placeholder="e.g. 123456789 or TXN-ID"
+                            />
                         </div>
                     </div>
 
