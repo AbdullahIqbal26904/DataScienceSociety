@@ -44,7 +44,7 @@ const HxDRegistration = () => {
     };
     
     useEffect(() => {
-        const deadline = new Date(2026, 1, 12, 23, 59, 59);
+        const deadline = new Date(2026, 1, 13, 23, 59, 59);
         const today = new Date();
         setIsEarlyBird(today < deadline);
     }, []);
