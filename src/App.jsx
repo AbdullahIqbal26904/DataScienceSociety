@@ -12,6 +12,7 @@ import HeroSection from './components/hero/HeroSection';
 import Navbar from './components/navbar/Navbar';
 import DataverseSection from './components/dataverse/DataverseSection';
 import HxDRegistration from './components/dataverse/HxDRegistration';
+import RegisitrationClosing from './components/dataverse/RegisitrationClosing'
 import AboutUs from './components/about/AboutUs';
 import Gallery from './components/gallery/Gallery';
 import { setshowloader, setInitialData } from './redux/features/portfolioSlice';
@@ -162,7 +163,7 @@ export default function App() {
             <main className="relative w-full min-h-screen">
               <BackgroundManager />
               <div className="relative z-10">
-                <HxDRegistration />
+                <RegisitrationClosing />
               </div>
             </main>
 
